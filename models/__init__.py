@@ -4,8 +4,6 @@ initialize the models package
 """
 
 from os import getenv, environ
-from models.engine.file_storage import FileStorage
-from models.engine.db_storage import DBStorage
 
 
 TEST_PATH = '/tmp/test_file.json'

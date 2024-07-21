@@ -2,6 +2,7 @@
 """This module defines a base class for all models in our todo clone"""
 
 from datetime import datetime
+from models import storage_t
 from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String, DateTime
@@ -10,19 +11,15 @@ import uuid
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
-def get_base():
-    from models import storage_t  # Local import to avoid circular dependency
-    if storage_t == 'db':
-        return declarative_base()
-    else:
-        return object
-
-Base = get_base()
+if storage_t == 'db':
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
     """A base class for all todo models"""
-    if models.storage_t == 'db':
+    if storage_t == 'db':
         id = Column(String(60), primary_key=True, nullable=False)
         created_at = Column(DateTime, nullable=False,
                             default=datetime.utcnow)
@@ -58,8 +55,8 @@ class BaseModel:
     def save(self):
         """updates the attribute 'updated_at' with the current datetime"""
         self.updated_at = datetime.utcnow()
-        models.storage.new(self)
-        models.storage.save()
+        storage_t.new(self)
+        storage_t.save()
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of the instance"""
@@ -75,4 +72,4 @@ class BaseModel:
 
     def delete(self):
         """delete the current instance from the storage"""
-        models.storage.delete(self)
+        storage_t.delete(self)
