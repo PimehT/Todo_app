@@ -11,13 +11,11 @@ class Category(BaseModel, Base):
         __tablename__ = 'categories'
         name = Column(String(128), nullable=False)
         description = Column(String(1024))
-        task_categories = relationship('TaskCategory', backref='category',
-                                       cascade='all, delete-orphan')
     else:
         id = ''
         name = ''
         description = ''
-    
+
     if models.storage_t != 'db':
         @property
         def tasks(self):
@@ -27,7 +25,7 @@ class Category(BaseModel, Base):
                 if task.category_id == self.id:
                     tasks.append(task)
             return tasks
-        
+
         @property
         def users(self):
             """getter for users"""

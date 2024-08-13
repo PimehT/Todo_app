@@ -8,12 +8,11 @@ from models.base_model import BaseModel
 from models.category import Category
 from models.comment import Comment
 from models.task import Task
-from models.task_category import TaskCategory
 from models.user import User
 import shlex  # for splitting the line along spaces except in double quotes
 
 classes = {"BaseModel": BaseModel, "User": User, "Task": Task,
-           "Category": Category, "TaskCatergory": TaskCategory, "Comment": Comment}
+           "Category": Category, "Comment": Comment}
 
 
 class TODOCommand(cmd.Cmd):

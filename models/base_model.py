@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """This module defines a base class for all models in our todo clone"""
 
-from datetime import datetime
 from models import storage_t
+from datetime import datetime
 from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String, DateTime
@@ -54,9 +54,10 @@ class BaseModel:
 
     def save(self):
         """updates the attribute 'updated_at' with the current datetime"""
+        from models import storage
         self.updated_at = datetime.utcnow()
-        storage_t.new(self)
-        storage_t.save()
+        storage.new(self)
+        storage.save()
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of the instance"""
@@ -72,4 +73,5 @@ class BaseModel:
 
     def delete(self):
         """delete the current instance from the storage"""
-        storage_t.delete(self)
+        from models import storage
+        storage.delete(self)

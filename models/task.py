@@ -3,10 +3,26 @@
 import models
 from models.base_model import BaseModel, Base
 from models.comment import Comment
-from models.task_category import TaskCategory
 from os import getenv
-from sqlalchemy import Column, String, ForeignKey, DateTime
+from sqlalchemy import (
+    Column, String, ForeignKey, DateTime, Table, CheckConstraint
+)
 from sqlalchemy.orm import relationship
+
+ALLOWED_STATUS_VALUES = ('Complete', 'Pending')
+
+if models.storage_t == 'db':
+    task_category = Table(
+        'task_category', Base.metadata,
+        Column(
+            'task_id',
+            String(60),
+            ForeignKey('tasks.id', onupdate='CASCADE', ondelete='CASCADE')),
+        Column(
+            'category_id',
+            String(60),
+            ForeignKey('categories.id', onupdate='CASCADE', ondelete='CASCADE'))
+    )
 
 
 class Task(BaseModel, Base):
@@ -16,13 +32,14 @@ class Task(BaseModel, Base):
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
         title = Column(String(128), nullable=False)
         description = Column(String(1024))
-        status = Column(String(60), nullable=False)
+        status = Column(
+            String(60),
+            CheckConstraint(f"status IN {ALLOWED_STATUS_VALUES}"),
+            nullable=False,
+            )
         deadline = Column(DateTime, nullable=False)
         comments = relationship('Comment', backref='task',
                                 cascade='all, delete-orphan')
-        task_categories = relationship('TaskCategory',
-                                       backref='task',
-                                       cascade='all, delete-orphan')
     else:
         id = ''
         user_id = ''
@@ -41,13 +58,13 @@ class Task(BaseModel, Base):
                     comments.append(comment)
             return comments
 
-        @property
-        def task_categories(self):
-            """getter for task_categories"""
-            task_categories = []
-            for task_category in (models.storage
-                                  .all(TaskCategory)
-                                  .values()):
-                if task_category.task_id == self.id:
-                    task_categories.append(task_category)
-            return task_categories
+        # @property
+        # def task_categories(self):
+        #     """getter for task_categories"""
+        #     task_categories = []
+        #     for task_category in (models.storage
+        #                           .all(TaskCategory)
+        #                           .values()):
+        #         if task_category.task_id == self.id:
+        #             task_categories.append(task_category)
+        #     return task_categories

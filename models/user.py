@@ -14,7 +14,9 @@ class User(BaseModel, Base):
     """This class defines a user by various attributes"""
     if models.storage_t == 'db':
         __tablename__ = 'users'
-        name = Column(String(128), nullable=False)
+        username = Column(String(60), nullable=False)
+        first_name = Column(String(128), nullable=False)
+        last_name = Column(String(128), nullable=False)
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
         tasks = relationship('Task', backref='user',
@@ -25,11 +27,11 @@ class User(BaseModel, Base):
         name = ''
         email = ''
         password = ''
-    
+
     def __init__(self, *args, **kwargs):
         """initializes user"""
         super().__init__(*args, **kwargs)
-    
+
     if models.storage_t != 'db':
         @property
         def tasks(self):
@@ -39,7 +41,7 @@ class User(BaseModel, Base):
                 if task.user_id == self.id:
                     tasks.append(task)
             return tasks
-        
+
         @property
         def comments(self):
             """getter for comments"""
