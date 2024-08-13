@@ -49,15 +49,15 @@ def create_task():
 @app_views.route('/tasks', methods=['GET'])
 def get_tasks():
     tasks = []
-    params_list = request.args.items()
     # organize params
+    params_list = request.args.items()
     filters = {p[0]: p[1] for p in params_list if hasattr(Task, p[0])}
-    for task_obj in storage.all(Task).values():
-        if filters:
-            for attr, value in filters.items():
-                if getattr(task_obj, attr) == value:
-                    tasks.append(task_obj.to_dict())
-        else:
+    if filters:
+        for task_obj in storage.all(Task).values():
+            if all(list(map(lambda kv: getattr(task_obj, kv[0])==kv[1], filters.items()))):
+                tasks.append(task_obj.to_dict())
+    else:
+        for task_obj in storage.all(Task).values():
             tasks.append(task_obj.to_dict())
 
     # implement params if any e.g ?sort=asc
