@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This module defines a class Task"""
 import models
-from models.base_model import BaseModel, Base
+from models.base_model import BaseModel, Base, datetime_format
 from models.comment import Comment
 from os import getenv
 from sqlalchemy import (

@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 from flask import Blueprint
 
+FILTER_PARAMS = ['sort', 'limit', 'order']
+
 def implement_args(return_list):
     """Implement args."""
     if not isinstance(return_list, list):

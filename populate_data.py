@@ -49,7 +49,7 @@ finally:
 # POPULATE DATABASE
 import openpyxl as op
 import models
-from models.base_model import BaseModel
+from models.base_model import BaseModel, datetime_format
 from models.category import Category
 from models.comment import Comment
 from models.task import Task, task_category
@@ -103,7 +103,7 @@ def worksheet(ws_name, obj, types=dict()):
                 #                                method="pbkdf2:sha1:1000",
                 #                                salt_length=8)
             elif attr in ['deadline']:
-                value = datetime.strptime(get_value(ws, row, col), '%Y-%m-%dT%H:%M:%S')
+                value = datetime.strptime(get_value(ws, row, col), datetime_format)
             elif attr in types:
                 value = types[attr](get_value(ws, row, col))
             else:
