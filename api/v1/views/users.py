@@ -116,6 +116,16 @@ def update_user(user_id):
     return jsonify({"user_id": user.id}), 200
 
 
+# Get user tasks: `GET /api/v1/users/<user_id>/tasks`
+@app_views.route('/users/<user_id>/tasks', methods=['GET'])
+def get_user_tasks(user_id):
+    user = storage.get(User, user_id)
+    if user is None:
+        return jsonify({"error": "Not found"}), 404
+    tasks = [task_obj.to_dict() for task_obj in user.tasks]
+    return jsonify(tasks), 200
+
+
 # @app_views.route('/protected', strict_slashes=False, methods=['GET'])
 # @jwt_required()
 # def protected():

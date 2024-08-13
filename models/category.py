@@ -11,6 +11,7 @@ class Category(BaseModel, Base):
         __tablename__ = 'categories'
         name = Column(String(128), nullable=False)
         description = Column(String(1024))
+        tasks = relationship('Task', secondary="task_category", viewonly=False)
     else:
         id = ''
         name = ''
