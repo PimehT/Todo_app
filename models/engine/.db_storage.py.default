@@ -4,15 +4,20 @@ Contains the class DBStorage
 """
 
 import models
-from models.base_model import BaseModel, Base
-from models.user import User
+# from models.base_model import BaseModel, Base
+# from models.category import Category
+# from models.comment import Comment
+# from models.task import Task
+# from models.user import User
 from os import getenv
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from dotenv import load_dotenv
-from sqlalchemy import insert
 
+# classes = {"BaseModel": BaseModel, "User": User, "Task": Task,
+#            "Category": Category, "Comment": Comment}
+
+classes = models.CLASSES
 
 class DBStorage:
     """interaacts with the MySQL database"""
@@ -34,42 +39,9 @@ class DBStorage:
         if TODO_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
-
-    def insert(self, table_obj, values_dict):
-        """Insert objects into a table, use for association tables."""
-        stmt = insert(table_obj).values(**values_dict)
-        self.__session.execute(stmt)
-        self.__session.commit()
-        return True, 'success'
-
-    def get_user(self, **kwargs):
-        """return a user based on attribute(s)."""
-        if not kwargs:
-            return
-        priority_list = [
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-            "password"
-        ]
-        filter_by_dict = dict()
-        for attr in priority_list:
-            if attr not in kwargs:
-                continue
-            key, value = attr, kwargs[attr]
-            filter_by_dict[key] = value
-
-        from models.user import User
-        user_obj = self.__session.query(User).filter_by(**filter_by_dict).first()
-
-        return user_obj
-
-
     def all(self, cls=None):
         """query on the current database session"""
         new_dict = {}
-        from models import CLASSES as classes
         for clss in classes:
             if cls is None or cls is classes[clss] or cls is clss:
                 objs = self.__session.query(classes[clss]).all()
@@ -93,7 +65,7 @@ class DBStorage:
 
     def reload(self):
         """reloads data from the database"""
-        Base.metadata.create_all(self.__engine)
+        models.Base.metadata.create_all(self.__engine)
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(sess_factory)
         self.__session = Session
