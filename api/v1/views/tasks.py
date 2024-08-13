@@ -71,7 +71,7 @@ def get_task_by_id(task_id):
     task = storage.get(Task, task_id)
     if not task:
         return jsonify({'error': 'Not found'}), 400
-    return jsonify({'task_id': task.id}), 200
+    return jsonify(task.to_dict()), 200
 
 # Update Task: `PUT /api/tasks/{task_id}`
 @app_views.route('/tasks/<task_id>', methods=['PUT'])
