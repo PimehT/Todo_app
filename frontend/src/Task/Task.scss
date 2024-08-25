@@ -1,0 +1,276 @@
+/* src/Task/Task.scss */
+@import '../App/App.scss';
+
+.todo-wrapper {
+  margin: 2rem auto;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+section.todo-wrapper.container {
+  width: 100%;
+  max-width: 750px;
+  padding: 2rem 0;
+}
+
+.create-task {
+  cursor: pointer;
+  position: absolute;
+  top: .5rem;
+  left: .5rem;
+  display: flex;
+  align-items: center;
+
+  p {
+    margin: 0 10px;
+    font-weight: bold;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  &.rotated {
+    transform: rotate(45deg);
+    transition: all 0.3s ease-in-out;
+    p {
+      display: none;
+    }
+  }
+}
+
+.todo-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.todo-input-item {
+  width: 100%;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 15px;
+
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+
+    &.required::after {
+      content: ' *';
+      color: red;
+    }
+  }
+
+  input, textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+  }
+}
+
+::placeholder {
+  opacity: 0.5;
+}
+
+.todo-input-item input:focus,
+.todo-input-item textarea:focus {
+  outline: 2px solid $color-primary;
+  border-color: $color-primary;
+}
+
+.primaryBtn {
+  background-color: $color-primary;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 25px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Tab styling */
+
+.btn-area {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.btn-area button {
+  position: relative;
+  background: none; /* Assuming you want a transparent background */
+  border: none;
+  font-size: 1rem; /* Adjust font size as needed */
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem; /* Adjust padding for your button style */
+  text-decoration: none;
+  outline: none;
+  font-weight: bold;
+}
+
+.btn-area button:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 3px;
+  bottom: -2px; /* Adjust this to position the underline correctly */
+  left: 0;
+  background-color: $color-primary; /* Adjust to match your design */
+  transform-origin: bottom left;
+  transition: transform 0.25s ease-out;
+}
+
+.btn-area button:hover:after {
+  transform: scaleX(1);
+}
+
+.secondaryBtn.active {
+  color: $color-primary;
+  transition: color 0.25s ease-out;
+}
+
+.primaryBtn {
+  &:hover {
+    background-color: darken($color-primary, 10%);
+  }
+}
+
+/* Todo-list styles */
+
+.todo-list {
+  width: 90%;
+}
+
+.todo-list-item {
+  background-color: $color-grey;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adds space between the elements */
+
+  input[type='checkbox'] {
+    display: none; /* Hides the checkbox input */
+  }
+
+  label {
+    border: 2px solid $color-primary;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    .check-icon {
+      opacity: 0;
+    }
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
+  input[type='checkbox']:checked + label .check-icon {
+    opacity: 1;
+  }
+
+  &.completed {
+    background-color: $color-success;
+  }
+
+  img.icon {
+    width: 20px; /* Adjust the icon size as needed */
+    height: 20px;
+    cursor: pointer;
+  }
+
+  /* Container for the text content */
+  .text-content {
+    display: flex;
+    flex-direction: column; /* Stack text content vertically */
+    flex-grow: 1;
+    gap: 5px; /* Adds space between title and description */
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      list-style: none;
+      margin: 0;
+      font-size: 18px;
+  
+      &:hover {
+        color: $color-primary;
+      }
+    }
+  
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+      transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+  
+    &[open] p {
+      max-height: 100px; /* Adjust based on your content */
+      opacity: 1;
+    }
+  }
+
+  .remove-icon {
+    margin-left: auto; /* Pushes the remove icon to the far right */
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}
+
+.text-content input,
+.text-content textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.text-content input:focus,
+.text-content textarea:focus {
+  outline: 2px solid $color-primary;
+  border-color: $color-primary;
+}
+
+.primaryBtn {
+  background-color: $color-primary;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+  &:hover {
+    background-color: darken($color-primary, 10%);
+  }
+}
+
+.icon.edit-icon {
+  cursor: pointer;
+  &:hover {
+    opacity: 0.5;
+  }
+}

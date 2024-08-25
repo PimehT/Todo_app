@@ -1,0 +1,20 @@
+$color-primary: #FC5813;
+$color-secondary: #FFE4D9;
+$color-secondary-variant: #FDF1ED;
+$color-grey: #F9F9F9;
+$color-white: #ffffff;
+$color-success: #e8fadd;
+$color-danger: #ffcccc;
+
+body {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: 750px;
+}
+
+button:hover {
+  cursor: pointer;
+}
