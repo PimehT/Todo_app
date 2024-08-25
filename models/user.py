@@ -14,6 +14,9 @@ class User(BaseModel, Base):
     """This class defines a user by various attributes"""
     if models.storage_t == 'db':
         __tablename__ = 'users'
+
+
+        uid = Column(String(60), nullable=False)
         username = Column(String(60), nullable=False)
         first_name = Column(String(128), nullable=False)
         last_name = Column(String(128), nullable=False)
