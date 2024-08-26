@@ -5,7 +5,7 @@ export const ModalContext = createContext();
 export const ModalProvider = ({ children }) => {
   const [modalState, setModalState] = useState({
     isModalOpen: false,
-    modalType: null, // 'login' or 'register'
+    modalType: null, // 'login' or 'register' or 'response'
   });
 
   const showModal = (type) => {
@@ -32,8 +32,13 @@ export const ModalProvider = ({ children }) => {
     showModal('register');
   };
 
+  const switchToResponse = () => {
+    hideModal();
+    showModal('response');
+  };
+
   return (
-    <ModalContext.Provider value={{ modalState, showModal, hideModal, switchToLogin, switchToRegister }}>
+    <ModalContext.Provider value={{ modalState, showModal, hideModal, switchToLogin, switchToRegister, switchToResponse }}>
       {children}
     </ModalContext.Provider>
   );

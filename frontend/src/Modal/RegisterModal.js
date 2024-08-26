@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useAuth } from '../Context/authContext';
+import ResponseModal from './ResponseModal';
 import './Modal.scss';
 
 const RegisterModal = ({ hideModal, switchToLogin }) => {
+  const { signup, doResendEmailVerification } = useAuth();
   const [formState, setFormState] = useState({
     formData: {
       firstName: '',
@@ -21,6 +24,15 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
     }
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [responseMessage, setResponseMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [resendMessage, setResendMessage] = useState('');
+  const [showResponseModal, setShowResponseModal] = useState(false);
+
+  const handleResendVerification = async () => {
+      const response = await doResendEmailVerification(formState.formData.email);
+      setResendMessage(response);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -73,11 +85,24 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateFormData()) {
       console.log('Form Data Submitted:', formState.formData);
-      hideModal();
+      const { email, password, firstName, lastName } = formState.formData;
+      try {
+        await signup(email, password, firstName, lastName);
+        console.log('User registered successfully');
+        setResponseMessage("A verification email has been sent to your email address. Please check your inbox and follow the instructions to verify your account.");
+        setShowResponseModal(true);
+      } catch (error) {
+        if (error.code === 'auth/email-already-in-use') {
+          setErrorMessage('The email address is already in use by another account.');
+        } else {
+          setErrorMessage('Error registering user: ' + error.message);
+        }
+        console.log('Error registering user:', errorMessage);
+      }
     }
   };
 
@@ -85,11 +110,24 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
     // sign up logic here
   }
 
+  const onClose = () => {
+    setShowResponseModal(false);
+    hideModal();
+  };
+
   const { formData, formErrors, passwordRequirements } = formState;
 
   return (
     <div className='modalZone'>
-      <div className='modalContainer'>
+      {showResponseModal ? (
+        <ResponseModal 
+          message={responseMessage}
+          onResend={handleResendVerification}
+          resendMessage={resendMessage}
+          onClose={onClose}
+        />
+      ) : (
+        <div className='modalContainer'>
         <div className='modalHeader'>
           <h2>Register Your Profile</h2>
           <button className='closeModalBtn' onClick={() => hideModal(false)}>&times;</button>
@@ -119,6 +157,7 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
                   </button>)}
                 </div>
                 {formErrors[field] && <p className='formError'>{formErrors[field]}</p>}
+                {errorMessage && field === 'email' && <p className='formError'>{errorMessage}</p>}
               </div>
             ))}
             {formData.password && (
@@ -143,6 +182,7 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
           </form>
         </div>
       </div>
+      )}
     </div>
   );
 };

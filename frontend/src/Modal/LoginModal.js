@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useAuth } from '../Context/authContext';
 import './Modal.scss';
 
 const LoginModal = ({ hideModal, switchToRegister }) => {
+  const { loginWithEmail } = useAuth();
   const [formState, setFormState] = useState({
     formData: {
       email: '',
@@ -44,7 +46,15 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
     e.preventDefault();
     if (validateFormData()) {
       console.log('Form Data Submitted:', formState.formData);
-      hideModal();
+      try {
+        const { email, password } = formState.formData;
+        const success = loginWithEmail(email, password);
+        console.log('Login Successful');
+        console.log('Success:', success);
+        hideModal();
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   };
 
