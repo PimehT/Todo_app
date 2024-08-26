@@ -5,7 +5,7 @@ import ResponseModal from './ResponseModal';
 import './Modal.scss';
 
 const RegisterModal = ({ hideModal, switchToLogin }) => {
-  const { signup, doResendEmailVerification } = useAuth();
+  const { signup, doResendEmailVerification, loginWithGoogle } = useAuth();
   const [formState, setFormState] = useState({
     formData: {
       firstName: '',
@@ -106,8 +106,13 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
     }
   };
 
-  const handleGoogleSignUp = (e) => {
+  const handleGoogleSignUp = async (e) => {
     // sign up logic here
+    try {
+      await loginWithGoogle();
+    } catch(error) {
+     setResponseMessage("Failed to login with goolgle");
+    }
   }
 
   const onClose = () => {
