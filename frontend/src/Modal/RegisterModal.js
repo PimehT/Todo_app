@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useAuth } from '../Context/authContext';
 import ResponseModal from './ResponseModal';
+import { ClipLoader } from 'react-spinners';
 import './Modal.scss';
 
 const RegisterModal = ({ hideModal, switchToLogin }) => {
@@ -28,10 +29,13 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [resendMessage, setResendMessage] = useState('');
   const [showResponseModal, setShowResponseModal] = useState(false);
+  const [loadingIcon, setLoadingIcon] = useState(false);
 
   const handleResendVerification = async () => {
-      const response = await doResendEmailVerification(formState.formData.email);
-      setResendMessage(response);
+    setLoadingIcon(true);
+    const response = await doResendEmailVerification(formState.formData.email);
+    setResendMessage(response);
+    setLoadingIcon(false);
   };
 
   const handleChange = (e) => {
@@ -87,6 +91,8 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoadingIcon(true);
     if (validateFormData()) {
       console.log('Form Data Submitted:', formState.formData);
       const { email, password, firstName, lastName } = formState.formData;
@@ -102,6 +108,8 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
           setErrorMessage('Error registering user: ' + error.message);
         }
         console.log('Error registering user:', errorMessage);
+      } finally {
+        setLoadingIcon(false);
       }
     }
   };
@@ -177,7 +185,9 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
             <div className='modalFooter'>
               <div className='Btn'>
                 <button type='button' className='closeModalBtn' onClick={() => hideModal(false)}>Close</button>
-                <button type='submit' className='saveModalBtn'>Register</button>
+                <button type='submit' className='saveModalBtn'>
+                  {loadingIcon ? <ClipLoader color='white' size={15} /> : 'Register'}
+                </button>
               </div>
               <div className='footerText'>
                 <p>Already have an account? <button onClick={switchToLogin}>Login</button></p>
