@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth, googleProvider } from '../firebase/firebase';
+import { auth, googleProvider, updateProfile } from '../firebase/firebase';
 import { 
   signInWithPopup, 
   signInWithEmailAndPassword, 
@@ -7,6 +7,7 @@ import {
   signOut, 
   onAuthStateChanged,
   RecaptchaVerifier,
+  sendEmailVerification,
 } from 'firebase/auth';
 
 const AuthContext = createContext();
@@ -29,18 +30,40 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  const signup = (email, password, firstName, lastName) => {
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        return userCredential.user.updateProfile({
-          displayName: `${firstName} ${lastName}`
-        });
+  const signup = async (email, password, firstName, lastName) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      await updateProfile(user, {
+        displayName: `${firstName} ${lastName}`
       });
+      await sendEmailVerification(user);
+      return user;
+    } catch (error) {
+      console.error('Error during signup:', error);
+      throw error;
+    }
   };
 
   const loginWithEmail = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
+
+  const doResendEmailVerification = async () => {
+    try {
+      await sendEmailVerification(currentUser);
+      console.log('Verification email resent.');
+      return ('Verification email resent');
+    } catch (error) {
+      if (error.code === 'auth/too-many-requests') {
+        return ('Too many requests. Try again later.');
+      } else if (error.code === 'auth/user-not-found') {
+        return ('User not found. Please register first.');
+      } else {
+        return ('Failed to resend verification email.');
+      }
+    }
+  }
 
   const loginWithGoogle = () => {
     return signInWithPopup(auth, googleProvider);
@@ -68,6 +91,7 @@ export const AuthProvider = ({ children }) => {
     signup,
     loginWithEmail,
     loginWithGoogle,
+    doResendEmailVerification,
     setupRecaptcha,
     logout,
     isLoginModalOpen,
