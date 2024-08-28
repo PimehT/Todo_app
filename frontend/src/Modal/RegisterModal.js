@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useAuth } from '../Context/authContext';
 import ResponseModal from './ResponseModal';
@@ -6,6 +7,7 @@ import { ClipLoader } from 'react-spinners';
 import './Modal.scss';
 
 const RegisterModal = ({ hideModal, switchToLogin }) => {
+  const navigate = useNavigate();
   const { signup, doResendEmailVerification, loginWithGoogle } = useAuth();
   const [formState, setFormState] = useState({
     formData: {
@@ -33,7 +35,7 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
 
   const handleResendVerification = async () => {
     setLoadingIcon(true);
-    const response = await doResendEmailVerification(formState.formData.email);
+    const response = await doResendEmailVerification();
     setResendMessage(response);
     setLoadingIcon(false);
   };
@@ -116,10 +118,19 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
 
   const handleGoogleSignUp = async (e) => {
     // sign up logic here
+    hideModal();
     try {
-      await loginWithGoogle();
+      const { token, user } = await loginWithGoogle();
+      navigate('/tasks');
+      console.log('user registered through google provider');
+      console.log('User:', user);
+      console.log('Token:', token);
     } catch(error) {
-     setResponseMessage("Failed to login with goolgle");
+      console.log('Google Sign-In Error:', error.message);
+      setFormState((prevState) => ({
+        ...prevState,
+        formErrors: { ...prevState.formErrors, login: error.message },
+      }));
     }
   }
 
@@ -185,7 +196,7 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
             <div className='modalFooter'>
               <div className='Btn'>
                 <button type='button' className='closeModalBtn' onClick={() => hideModal(false)}>Close</button>
-                <button type='submit' className='saveModalBtn'>
+                <button type='submit' className='saveModalBtn' disabled={loadingIcon}>
                   {loadingIcon ? <ClipLoader color='white' size={15} /> : 'Register'}
                 </button>
               </div>

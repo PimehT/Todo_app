@@ -6,7 +6,7 @@ const ResponseModal = ({ message, onResend, onClose, resendMessage }) => {
     <div className="modalZone">
       <div className="modalContainer">
         <div className="modalHeader">
-          <h2>Verification Email Sent</h2>
+          <h2>{message.includes('Email not verified.') ? 'Email Not Verified' : 'Verification Email Sent'}</h2>
           <button className="closeModalBtn" onClick={onClose}>&times;</button>
         </div>
         <div className="modalBody">

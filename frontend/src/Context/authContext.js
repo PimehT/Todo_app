@@ -8,6 +8,8 @@ import {
   onAuthStateChanged,
   RecaptchaVerifier,
   sendEmailVerification,
+  sendPasswordResetEmail,
+  updatePassword,
 } from 'firebase/auth';
 
 const AuthContext = createContext();
@@ -45,8 +47,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const loginWithEmail = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+  const loginWithEmail = async (email, password) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      if (!user.emailVerified) {
+        setCurrentUser(user);
+        throw new Error('Email not verified. Please verify your email before logging in.');
+      }
+      return userCredential;
+    } catch (error) {
+      if (!error.code) {
+        throw new Error(error.message);
+      } else {
+        switch (error.code) {
+          case 'auth/invalid-credential':
+            throw new Error('Invalid email or password.');
+          case 'auth/user-not-found':
+            throw new Error('No user found with this email.');
+          case 'auth/wrong-password':
+            throw new Error('Incorrect password.');
+          case 'auth/user-disabled':
+            throw new Error('This user account has been disabled.');
+          case 'auth/too-many-requests':
+            throw new Error('Too many login attempts. Please try again later.');
+          default:
+            console.error('Error during login:', error);
+            throw new Error(error.message);
+        }
+      }
+    }
   };
 
   const doResendEmailVerification = async () => {
@@ -65,8 +95,50 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const loginWithGoogle = () => {
-    return signInWithPopup(auth, googleProvider);
+  const loginWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const credential = googleProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      const user = result.user;
+      return { user, token };
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const email = error.customData.email;
+      const credential = googleProvider.credentialFromError(error);
+      console.log('Error during Google sign-in:', error);
+      console.log('Error code:', errorCode);
+      console.log('User email:', email);
+      console.log('Credential error:', credential);
+      throw new Error(errorMessage);
+    }
+  };
+
+  const resetPassword = async (email) => {
+    const actionCodeSettings = {
+      url: 'http://172.26.175.207:3000/reset-password', // This should match your app's reset route
+      handleCodeInApp: true, // Optional: if you want to handle the reset in the app
+    };
+    try {
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
+      console.log('Password reset email sent successfully');
+      return 'Password reset email sent. Check your inbox.';
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+      switch (error.code) {
+        case 'auth/user-not-found':
+          throw new Error('No user found with this email address.');
+        case 'auth/invalid-email':
+          throw new Error('Invalid email address.');
+        default:
+          throw new Error('Failed to send password reset email.');
+      }
+    }
+  };
+
+  const doPasswordUpdate = (password) => {
+    return updatePassword(auth.currentUser, password);
   };
 
   const setupRecaptcha = (containerId) => {
@@ -88,13 +160,15 @@ export const AuthProvider = ({ children }) => {
   const value = {
     currentUser,
     userLoggedIn,
+    isLoginModalOpen,
     signup,
     loginWithEmail,
     loginWithGoogle,
     doResendEmailVerification,
+    doPasswordUpdate,
+    resetPassword,
     setupRecaptcha,
     logout,
-    isLoginModalOpen,
     openLoginModal,
     closeLoginModal,
   };
