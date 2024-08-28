@@ -89,6 +89,8 @@ export const AuthProvider = ({ children }) => {
         return ('Too many requests. Try again later.');
       } else if (error.code === 'auth/user-not-found') {
         return ('User not found. Please register first.');
+      } else if (error.code === 'auth/network-request-failed') {
+        return ('Bad connection. Check network connection.')
       } else {
         return ('Failed to resend verification email.');
       }

@@ -130,7 +130,7 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
       hideModal();
     } catch (error) {
       console.error('Login Error:', error.message);
-      setErrorMessage(error.message);
+      setErrorMessage({field: 'email', message: error.message});
     } finally {
       setLoadingIcon(false);
     }
@@ -171,7 +171,7 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
                       id={field}
                       name={field}
                       placeholder={field === 'password' ? '********' : 'example@email.com'}
-                      value={formData[field]}
+                      value={formData[field] || ''}
                       onChange={handleChange}
                     />
                     {field.includes('password') && (
@@ -184,7 +184,10 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
                       </button>
                     )}
                   </div>
-                  { !errorMessage.message.includes('reset password') && formErrors[field] && <p className='formError'>{formErrors[field]}</p>}
+                  { errorMessage.message
+                    && !errorMessage.message.includes('reset')
+                    && formErrors[field]
+                    && <p className='formError'>{formErrors[field]}</p>}
                   {errorMessage.field === field && <p className='formError'>{errorMessage.message}</p>}
                 </div>
               ))}
