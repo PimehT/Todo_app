@@ -98,11 +98,13 @@ export const AuthProvider = ({ children }) => {
   }
 
   const loginWithGoogle = async () => {
-    try {
+    /* try {
       const result = await signInWithPopup(auth, googleProvider);
       const credential = googleProvider.credentialFromResult(result);
       const token = credential.accessToken;
       const user = result.user;
+      console.log('Result:', result);
+      console.log('Credentials: ', credential);
       return { user, token };
     } catch (error) {
       const errorCode = error.code;
@@ -114,7 +116,12 @@ export const AuthProvider = ({ children }) => {
       console.log('User email:', email);
       console.log('Credential error:', credential);
       throw new Error(errorMessage);
-    }
+    } */
+    const result = await signInWithPopup(auth, googleProvider);
+    console.log('auth result', result);
+    const user = result['user']
+    console.log('auth user: ', user);
+    return result;
   };
 
   const resetPassword = async (email) => {
