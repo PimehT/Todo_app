@@ -5,7 +5,9 @@ from flask import jsonify, request
 from models import storage
 from models.user import User
 from api.v1.auth import verify_firebase_token
+import logging
 
+logger = logging.getLogger(__name__)
 
 # from flask_jwt_extended import (
 #     create_access_token,
@@ -20,13 +22,15 @@ from api.v1.auth import verify_firebase_token
 def register_user():
     data = request.get_json(silent=True)
     if not isinstance(data, dict):
+        logger.warning("Not an instance of dictionary")
         return jsonify({"error": "Not a JSON"}), 400
 
     required = [
-        "uid"  "email", "password", "username", "first_name", "last_name"
+        "uid", "email", "password", "first_name", "last_name"
     ]
     for attr in required:
         if attr not in data:
+            logger.debug("Missing attributes")
             return jsonify({"error": f"Missing {attr}"}), 400
 
     # Ensure that the uid and email are unique
@@ -36,7 +40,7 @@ def register_user():
         return jsonify({'error': "user already exists exists"}), 400
 
     # store the password hash and not the actual password
-    # hashed_password = generate_password_hash(data['password'],
+    # hashed_password = generate_password_hash(data['password'],
     #                                          method="pbkdf2:sha1:1000",
     #                                          salt_length=8)
     # data['password'] = hashed_password
@@ -81,20 +85,20 @@ def login():
 
 
 # Get User Profile
-@app_views.route('users/<uid>', methods=['GET'])
+@app_views.route('/users_profile', methods=['GET'])
 @verify_firebase_token
-def get_user_profile(uid):
-    user = storage.get(User, uid)
+def get_user_profile():
+    user = request.user
     if user is None:
         return jsonify({"error": "Not found"}), 404
     return jsonify(user.to_dict()), 200
 
 
 # Delete User Account
-@app_views.route('/users/<uid>', methods=['DELETE'])
+@app_views.route('/delete_user', methods=['DELETE'])
 @verify_firebase_token
-def delete_user(uid):
-    user = storage.get(User, uid)
+def delete_user():
+    user = request.user
     if user is None:
         return jsonify({"error": "Not found"}), 404
     storage.delete(user)
@@ -103,13 +107,13 @@ def delete_user(uid):
 
 
 # Update user profile
-@app_views.route('/users/<uid>', methods=['PUT'])
+@app_views.route('/update_user', methods=['PUT'])
 @verify_firebase_token
-def update_user(uid):
+def update_user():
     acceptable_attrs = [
         "email", "password",  # "first_name", "last_name"
     ]
-    user = storage.get(User, uid)
+    user = request.user
     if user is None:
         return jsonify({"error": "Not found"}), 404
     data = request.get_json(silent=True)
@@ -124,10 +128,10 @@ def update_user(uid):
 
 
 # Get user tasks: `GET /api/v1/users/<user_id>/tasks`
-@app_views.route('/users/<user_id>/tasks', methods=['GET'])
+@app_views.route('/users/tasks', methods=['GET'])
 @verify_firebase_token
-def get_user_tasks(user_id):
-    user = storage.get(User, user_id)
+def get_user_tasks():
+    user = request.user
     if user is None:
         return jsonify({"error": "Not found"}), 404
     tasks = [task_obj.to_dict() for task_obj in user.tasks]

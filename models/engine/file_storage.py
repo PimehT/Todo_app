@@ -4,13 +4,12 @@ import json
 from models.base_model import BaseModel
 from models.category import Category
 from models.comment import Comment
-from models.task_category import TaskCategory
 from models.task import Task
 from models.user import User
 
 classes = {
             "BaseModel": BaseModel, "User": User, "Task": Task,
-            "Category": Category, "TaskCatergory": TaskCategory,
+            "Category": Category,
             "Comment": Comment
         }
 

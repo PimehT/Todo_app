@@ -47,6 +47,7 @@ class DBStorage:
         if not kwargs:
             return
         priority_list = [
+            "uid",
             "username",
             "email",
             "first_name",
