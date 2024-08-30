@@ -1,3 +1,5 @@
 /new
 **/__pycache__/
 .env
+frontend/.cache/
+frontend/node_modules/
