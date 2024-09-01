@@ -9,7 +9,7 @@ import {
   RecaptchaVerifier,
   sendEmailVerification,
   sendPasswordResetEmail,
-  updatePassword,
+  confirmPasswordReset,
 } from 'firebase/auth';
 
 const AuthContext = createContext();
@@ -39,7 +39,11 @@ export const AuthProvider = ({ children }) => {
       await updateProfile(user, {
         displayName: `${firstName} ${lastName}`
       });
-      await sendEmailVerification(user);
+      const actionCodeSettings = {
+        url: 'http://localhost:3000',
+        handleCodeInApp: true
+      };
+      await sendEmailVerification(user, actionCodeSettings);
       return user;
     } catch (error) {
       console.error('Error during signup:', error);
@@ -126,7 +130,7 @@ export const AuthProvider = ({ children }) => {
 
   const resetPassword = async (email) => {
     const actionCodeSettings = {
-      url: 'http://172.26.175.207:3000/reset-password', // This should match your app's reset route
+      url: 'http://localhost:3000', // This should match your app's reset route
       handleCodeInApp: true, // Optional: if you want to handle the reset in the app
     };
     try {
@@ -146,8 +150,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const doPasswordUpdate = (password) => {
-    return updatePassword(auth.currentUser, password);
+  const doPasswordUpdate = async (oobCode, newPassword) => {
+    try {
+      await confirmPasswordReset(auth, oobCode, newPassword);
+      console.log('Password successfully reset');
+      return 'Password successfully reset';
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      throw new Error(error.message);
+    }
   };
 
   const setupRecaptcha = (containerId) => {
@@ -162,6 +173,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => signOut(auth);
+
+  // Function to delete user account
+  const deleteUser = async () => {
+    try {
+      await currentUser.delete();
+      console.log('User account deleted successfully');
+      return 'User account deleted successfully';
+    } catch (error) {
+      console.error('Error deleting user account:', error);
+      throw new Error(error.message);
+    }
+  };
+
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
@@ -178,6 +202,7 @@ export const AuthProvider = ({ children }) => {
     resetPassword,
     setupRecaptcha,
     logout,
+    deleteUser,
     openLoginModal,
     closeLoginModal,
   };

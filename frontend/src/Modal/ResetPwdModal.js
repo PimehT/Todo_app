@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { ClipLoader } from 'react-spinners';
 import { useAuth } from '../Context/authContext';
@@ -7,8 +7,9 @@ import { ModalContext } from '../Context/modalContext';
 import './Modal.scss';
 
 const ResetPwdModal = () => {
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
+  const params = useParams();
   const { doPasswordUpdate, userLoggedIn } = useAuth();
   const { hideModal } = useContext(ModalContext);
   const [formState, setFormState] = useState({
@@ -28,6 +29,17 @@ const ResetPwdModal = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loadingIcon, setLoadingIcon] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [oobCode, setOobCode] = useState('');
+
+  useEffect(() => {
+    const currentOobCode = params.oobCode || new URLSearchParams(location.search).get('oobCode');
+    if (!currentOobCode) {
+      console.error('Invalid oobCode:', currentOobCode);
+      setErrorMessage('Invalid password reset code. Please try again.');
+      return;
+    }
+    setOobCode(currentOobCode);
+  }, [params, location]);
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
@@ -83,19 +95,8 @@ const ResetPwdModal = () => {
     if (validateFormData()) {
       setLoadingIcon(true);
       const { password } = formState.formData;
-      
-      // Extract the `oobCode` from the URL
-      const queryParams = new URLSearchParams(location.search);
-      const oobCode = queryParams.get('oobCode');
-
-      if (!oobCode) {
-        setErrorMessage('Invalid or missing reset code.');
-        setLoadingIcon(false);
-        return;
-      }
 
       try {
-        // Call doPasswordUpdate with the oobCode and new password
         await doPasswordUpdate(oobCode, password);
         hideModal();
         userLoggedIn ? navigate('/tasks') : navigate('/');

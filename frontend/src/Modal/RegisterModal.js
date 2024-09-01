@@ -145,6 +145,7 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
     <div className='modalZone'>
       {showResponseModal ? (
         <ResponseModal 
+          title={'Verification Email Sent'}
           message={responseMessage}
           onResend={handleResendVerification}
           resendMessage={resendMessage}

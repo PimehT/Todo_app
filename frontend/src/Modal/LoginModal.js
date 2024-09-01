@@ -27,6 +27,8 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
   });
   const [resendMessage, setResendMessage] = useState('');
   const [showResponseModal, setShowResponseModal] = useState(false);
+  const [responseBool, setResponseBool] = useState(false);
+  const [response, setResponse] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -126,8 +128,8 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
     setLoadingIcon(true);
     try {
       const response = await resetPassword(email);
-      console.log(response);
-      hideModal();
+      setResponseBool(true);
+      setResponse(response);
     } catch (error) {
       console.error('Login Error:', error.message);
       setErrorMessage({field: 'email', message: error.message});
@@ -146,7 +148,8 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
   return (
     <div className='modalZone'>
       {showResponseModal ? (
-        <ResponseModal 
+        <ResponseModal
+          title={'Email Not Verified'}
           message={errorMessage.message}
           onResend={handleResendVerification}
           resendMessage={resendMessage}
@@ -202,6 +205,7 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
                   <p>Don't have an account? <button onClick={switchToRegister}>Sign Up</button></p>
                   <p>Login with <button onClick={handleGoogleLogin}>Google</button></p>
                   <p style={{ paddingTop: '5px'}}>Forgot your password? <button onClick={handleResetPassword}>Reset</button></p>
+                  {responseBool && <p style={{ color: 'green' }}>{response}</p>}
                 </div>
               </div>
             </form>

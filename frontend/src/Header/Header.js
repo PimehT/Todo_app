@@ -5,6 +5,7 @@ import Logo from '../assets/banner-orange.png';
 import ProfileIcon from '../assets/user-solid.svg';
 import NotifyIcon from '../assets/bell-solid.svg';
 import Search from '../Search/Search';
+import ProfileDropdown from '../ProfileDropdown/ProfileDropdown';
 import { useAuth } from '../Context/authContext';
 import { ModalContext } from '../Context/modalContext';
 
@@ -13,18 +14,21 @@ const Header = () => {
   const { switchToLogin } = React.useContext(ModalContext);
   const navigate = useNavigate();
 
-  const profileClick = () => console.log('Profile icon clicked');
-  const notifyClick = () => console.log('Search icon clicked');
+  const notifyClick = () => console.log('Notification icon clicked');
 
   return (
     <header className='Header'>
       <div className='container'>
         <div className='left-header'>
-          <img src={Logo} alt='app logo' className='App-logo' onClick={() => navigate('/')} />
+          <img src={Logo} alt='app logo' className='App-logo' onClick={() => userLoggedIn ? navigate('/tasks') : navigate('/')} />
 
-          <div className='icon profile-icon' onClick={ userLoggedIn ? profileClick : switchToLogin} >
-            <img src={ProfileIcon} alt='profile icon' />
-          </div>
+          {userLoggedIn ? (
+            <ProfileDropdown />
+          ) : (
+            <div className="icon profile-icon" onClick={switchToLogin}>
+              <img src={ProfileIcon} alt="profile icon" />
+            </div>
+          )}
         </div>
 
         <div className='right-header'>
