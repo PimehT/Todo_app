@@ -187,7 +187,11 @@ section.todo-wrapper.container {
   }
 
   &.completed {
+<<<<<<< HEAD
     background-color: #00ff7722;
+=======
+    background-color: $color-success;
+>>>>>>> 7f255d94b522ff33590463a74df7c8e9e1f4921e
   }
 
   img.icon {

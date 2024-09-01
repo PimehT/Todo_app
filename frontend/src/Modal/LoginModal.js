@@ -14,8 +14,8 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
   } = useAuth();
   const [formState, setFormState] = useState({
     formData: {
+      email: '',
       password: '',
-      confirmPassword: '',
     },
     formErrors: {},
   });
