@@ -40,6 +40,15 @@ class Task(BaseModel, Base):
         deadline = Column(DateTime, nullable=False)
         comments = relationship('Comment', backref='task',
                                 cascade='all, delete-orphan')
+        category = relationship('Category', secondary='task_category', viewonly=True)
+
+        def to_dict(self):
+            """Add category"""
+            output = super().to_dict()
+            if self.category:
+                output['category'] = self.category[0].to_dict()
+            return output
+
     else:
         id = ''
         user_id = ''
@@ -48,7 +57,6 @@ class Task(BaseModel, Base):
         status = ''
         deadline = ''
 
-    if models.storage_t != 'db':
         @property
         def comments(self):
             """getter for comments"""
@@ -57,6 +65,8 @@ class Task(BaseModel, Base):
                 if comment.task_id == self.id:
                     comments.append(comment)
             return comments
+
+        # TODO: file_storage getter for category
 
         # @property
         # def task_categories(self):

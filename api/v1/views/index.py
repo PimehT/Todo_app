@@ -12,20 +12,16 @@ def get_status():
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
 def get_stats():
     from models import storage
-    from models.state import State
-    from models.city import City
-    from models.amenity import Amenity
-    from models.place import Place
-    from models.review import Review
     from models.user import User
+    from models.category import Category
+    from models.comment import Comment
+    from models.task import Task
 
     classes = {
-        'states': State,
-        'cities': City,
-        'amenities': Amenity,
-        'places': Place,
-        'reviews': Review,
-        'users': User
+        'users': User,
+        'category': Category,
+        'comment': Comment,
+        'task': Task,
     }
     stats = {}
     for key, value in classes.items():
