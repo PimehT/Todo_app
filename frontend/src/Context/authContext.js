@@ -11,6 +11,7 @@ import {
   sendPasswordResetEmail,
   confirmPasswordReset,
 } from 'firebase/auth';
+import { registerUser } from '../Utils/userManagement';
 
 const AuthContext = createContext();
 
@@ -39,6 +40,15 @@ export const AuthProvider = ({ children }) => {
       await updateProfile(user, {
         displayName: `${firstName} ${lastName}`
       });
+
+      // send user details to backend
+      await registerUser({
+        firebaseUid: user.uid,
+        email: user.email,
+        firstName,
+        lastName,
+      });
+
       const actionCodeSettings = {
         url: 'http://localhost:3000',
         handleCodeInApp: true
