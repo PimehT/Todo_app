@@ -7,14 +7,7 @@ from models.user import User
 from api.v1.auth import verify_firebase_token
 import logging
 
-logger = logging.getLogger(__name__)
-
-# from flask_jwt_extended import (
-#     create_access_token,
-#     jwt_required,
-#     get_jwt_identity
-# )
-# from werkzeug.security import generate_password_hash, check_password_hash
+#logger = logging.getLogger(__name__)
 
 
 # Register User
@@ -22,15 +15,15 @@ logger = logging.getLogger(__name__)
 def register_user():
     data = request.get_json(silent=True)
     if not isinstance(data, dict):
-        logger.warning("Not an instance of dictionary")
+        #logger.warning("Not an instance of dictionary")
         return jsonify({"error": "Not a JSON"}), 400
 
     required = [
-        "uid", "email", "password", "first_name", "last_name"
+        "uid", "email", "password", "first_name", "last_name", "username"
     ]
     for attr in required:
         if attr not in data:
-            logger.debug("Missing attributes")
+            #logger.debug("Missing attributes")
             return jsonify({"error": f"Missing {attr}"}), 400
 
     # Ensure that the uid and email are unique
@@ -52,36 +45,6 @@ def register_user():
         return jsonify({"Error saving user data": e})
     return jsonify({'Success': "User has been registered successfully"}), 201
 
-
-# login user
-"""@app_views.route('/login', strict_slashes=False, methods=['POST'])
-def login():
-    data = request.get_json(silent=True)
-    if not isinstance(data, dict):
-        return jsonify({"error": "Not a JSON"}), 400
-    required = [
-        "username", "password"
-    ]
-    for attr in required:
-        if attr not in data:
-            return jsonify({"error": f"Missing {attr}"}), 400
-
-    user = storage.get_user(username=data.get('username'))
-    print(type(user))
-    if user is None:
-        return jsonify({'Error': 'unknown username and/or password'}), 401
-    if user.password != data.get('password'):
-        return jsonify({'Error': 'unknown username and/or password'}), 401
-    # if not check_password_hash(user.password, data.get('password')):
-    #     return jsonify({'Error': 'unknown username and/or password'}), 401
-
-    # access_token = create_access_token(identity=user.id)
-
-    # return jsonify({'access_token': access_token, 'user_id': user.id}), 200
-    return jsonify({'user_id': user.id}), 200
-"""
-
-# TODO: Logout user
 
 
 # Get User Profile
@@ -137,12 +100,3 @@ def get_user_tasks():
     tasks = [task_obj.to_dict() for task_obj in user.tasks]
     return jsonify(tasks), 200
 
-
-# @app_views.route('/protected', strict_slashes=False, methods=['GET'])
-# @jwt_required()
-# def protected():
-#     current_user = get_jwt_identity()
-#     data = {
-#         'logged_in_as': current_user,
-#     }
-#     return jsonify(data), 200

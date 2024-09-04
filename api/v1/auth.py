@@ -11,15 +11,15 @@ app = Flask(__name__)
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate('fire_key.json')
 firebase_admin.initialize_app(cred)
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 def verify_firebase_token(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        logger.info("Authentication started")
+        #logger.info("Authentication started")
 
         auth_header = request.headers.get('Authorization')
-        logger.info("Received token", auth_header)
+        #logger.info("Received token", auth_header)
         if not auth_header:
             return jsonify({"error": "Authorization header missing"}), 401
 
@@ -30,13 +30,13 @@ def verify_firebase_token(f):
 
         id_token = parts[1]  # The actual token part
 
-        logger.debug("Finalized token", id_token)
+        #logger.debug("Finalized token", id_token)
 
         try:
             # Verify the token and decode it
             decoded_token = auth.verify_id_token(id_token)
             uid = decoded_token["uid"]
-            logger.info("Received uid", uid)
+            #logger.info("Received uid", uid)
 
             try:
                 user = storage.get_user(uid=uid)  # Corrected syntax
