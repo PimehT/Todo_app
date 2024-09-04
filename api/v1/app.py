@@ -14,7 +14,7 @@ app = Flask(__name__)
 # jwt = JWTManager(app)
 
 # cors = CORS(app, resources={r'/*': {"origins": "0.0.0.0"}})
-cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/api/v1/*": {"origins": ["https://www.onepimeht.tech", "http://localhost"]}})
 app.register_blueprint(app_views)
 
 
