@@ -40,20 +40,18 @@ export const AuthProvider = ({ children }) => {
       await updateProfile(user, {
         displayName: `${firstName} ${lastName}`
       });
+      await sendEmailVerification(user);
 
       // send user details to backend
       await registerUser({
-        firebaseUid: user.uid,
+        uid: user.uid,
         email: user.email,
-        firstName,
-        lastName,
+        first_name: firstName,
+        last_name: lastName,
+        password: password,
+        username: firstName,
       });
 
-      const actionCodeSettings = {
-        url: 'http://localhost:3000',
-        handleCodeInApp: true
-      };
-      await sendEmailVerification(user, actionCodeSettings);
       return user;
     } catch (error) {
       console.error('Error during signup:', error);

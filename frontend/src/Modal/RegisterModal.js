@@ -109,6 +109,7 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
         } else {
           setErrorMessage('Error registering user: ' + error.message);
         }
+        setLoadingIcon(false);
         console.log('Error registering user:', errorMessage);
       } finally {
         setLoadingIcon(false);
