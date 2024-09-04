@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }) => {
         displayName: `${firstName} ${lastName}`
       });
       await sendEmailVerification(user);
+      console.log(user.uid);
 
       // send user details to backend
       await registerUser({

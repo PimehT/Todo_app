@@ -5,7 +5,12 @@ const BASE_URL = 'https://www.onepimeht.tech/api/v1';
 // Register User
 export const registerUser = async (userData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/users/register`, userData, { timeout: 10000 });
+    const response = await axios.post(`${BASE_URL}/users/register`, userData,
+      {headers: {
+        'Content-Type': 'Application/json',
+      }},
+      { timeout: 10000 },
+    );
     console.log('Register User Response:', response);
     return 'Successful registration';
   } catch (error) {
