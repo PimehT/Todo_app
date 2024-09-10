@@ -39,11 +39,15 @@ def create_task():
 
     # validate format of deadline
     try:
-        datetime.strptime(data['deadline'], datetime_format)
+        this_date = datetime.strptime(data['deadline'], datetime_format)
         # valid_deadline = datetime.strptime(data['deadline'], datetime_format_H_M)
     except ValueError:
         return jsonify({'error': "deadline '%Y-%m-%dT%H:%M:%S'"}), 400
         # return jsonify({'error': "deadline '%Y-%m-%dT%H:%M'"}), 400
+
+    # ensure deadline is in the future
+    if this_date < datetime.now():
+        return jsonify({'error': "deadline cannot be in the past"}), 400
 
     # validate status
     if data['status'] not in ALLOWED_STATUS_VALUES:
