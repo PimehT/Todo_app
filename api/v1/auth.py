@@ -23,9 +23,8 @@ def readBackdoor():
     """
     bypass_header = request.headers.get('X-Bypass')
 
-    email = bypass_header.strip()
     try:
-        user = storage.get_user(email=email)
+        user = storage.get_user(email=bypass_header)
         if not user:
             print("Auth Bypass detected but user with email does not exist")
             return None

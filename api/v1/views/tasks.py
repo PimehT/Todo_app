@@ -6,7 +6,30 @@ from flask import jsonify, request
 from models import storage
 from models.task import Task, ALLOWED_STATUS_VALUES, datetime_format
 from datetime import datetime
+from models.engine.search import search
 
+
+# Search tasks `POST /api/v1/tasks/search`
+@app_views.route('/tasks/search', methods=['POST'])
+@verify_firebase_token
+def search_tasks():
+    user = request.user
+    if not user:
+        return jsonify({"error": "Unauthorized: Login required"}), 401
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Not a JSON"}), 400
+
+    filters = data.get("filters", {})
+    # add user to filters
+    filters['user'] = request.user
+
+    results, error = search(filters,Task)
+    if error:
+        return jsonify(error), 400
+
+    return jsonify(results), 200
 
 # Create Task: `POST /api/tasks`
 @app_views.route('/tasks', methods=['POST'])

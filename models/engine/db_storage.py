@@ -11,7 +11,9 @@ import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from dotenv import load_dotenv
-from sqlalchemy import insert
+from sqlalchemy import insert, or_, and_
+
+from typing import Optional
 
 
 class DBStorage:
@@ -34,6 +36,11 @@ class DBStorage:
         if TODO_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
+    def advanced_search(self, cls, clauses:list, condition: str)->Optional[list]:
+        """Fetches objects in cls based on clauses and condition"""
+        cond_obj = or_ if condition == 'OR' else and_
+        results = self.__session.query(cls).filter(cond_obj(*clauses)).all()
+        return results
 
     def insert(self, table_obj, values_dict):
         """Insert objects into a table, use for association tables."""
