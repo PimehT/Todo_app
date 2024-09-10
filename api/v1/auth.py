@@ -13,10 +13,37 @@ cred = credentials.Certificate('fire_key.json')
 firebase_admin.initialize_app(cred)
 #logger = logging.getLogger(__name__)
 
+def readBackdoor():
+    """
+    Implements bypassing authorization for testing and admin purposes
+    add this header in the request
+    X-Bypass: email
+
+    Returns a user or None
+    """
+    bypass_header = request.headers.get('X-Bypass')
+
+    email = bypass_header.strip()
+    try:
+        user = storage.get_user(email=email)
+        if not user:
+            print("Auth Bypass detected but user with email does not exist")
+            return None
+        return user
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
 def verify_firebase_token(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         #logger.info("Authentication started")
+
+        bypass = readBackdoor()
+        if bypass:
+            print(f"Auth Bypass detected user: '{bypass.email}'")
+            request.user = bypass
+            return f(*args, **kwargs)
 
         auth_header = request.headers.get('Authorization')
         #logger.info("Received token", auth_header)
@@ -54,4 +81,3 @@ def verify_firebase_token(f):
         return f(*args, **kwargs)
 
     return decorated_function
-
