@@ -92,6 +92,9 @@ if [[ "$@" =~ -c ]]; then
     else
         echo "$backups_path not cleared"
     fi
+    if [ -z $files ]; then
+        exit 0
+    fi
 fi
 
 # Backup backend if flag -B is not passed
