@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import './Header.scss';
 import Logo from '../assets/banner-orange.png';
 import ProfileIcon from '../assets/user-solid.svg';
-import NotifyIcon from '../assets/bell-solid.svg';
 import Search from '../Search/Search';
 import ProfileDropdown from '../ProfileDropdown/ProfileDropdown';
+import Notification from '../Notification/Notification';
 import { useAuth } from '../Context/authContext';
 import { ModalContext } from '../Context/modalContext';
 
@@ -35,7 +35,7 @@ const Header = () => {
           <Search />
 
           <div className='icon notifyBtn' onClick={ userLoggedIn ? notifyClick : switchToLogin} >
-            <img src={NotifyIcon} alt='notification icon' />
+            <Notification />
           </div>
         </div>
       </div>
