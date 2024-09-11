@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from '../Header/Header';
 import Banner from '../Banner/Banner';
 import Task from '../Task/Task';
+import Footer from '../Footer/Footer';
 import ResetPwdModal from '../Modal/ResetPwdModal';
 import { AuthProvider } from '../Context/authContext';
 import { ModalProvider } from '../Context/modalContext';
@@ -23,6 +24,7 @@ function App() {
                 <Route path='/reset-password' element={<ResetPwdModal />} />
               </Routes>
             </main>
+            <Footer />
           </div>
         </Router>
       </ModalProvider>

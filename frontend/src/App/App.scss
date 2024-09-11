@@ -6,6 +6,11 @@ $color-white: #ffffff;
 $color-success: #e8fadd;
 $color-danger: #ffcccc;
 
+// width of screen sizes
+$width-desktop: 1200px;
+$width-tablet: 768px;
+$width-mobile: 480px;
+
 body {
   box-sizing: border-box;
 }
