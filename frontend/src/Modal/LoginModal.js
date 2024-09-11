@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
 import { ClipLoader } from 'react-spinners';
 import { useAuth } from '../Context/authContext';
 import ResponseModal from './ResponseModal';
@@ -65,9 +65,8 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
       setLoadingIcon(true);
       try {
         const { email, password } = formState.formData;
-        const userCredential = await loginWithEmail(email, password);
+        await loginWithEmail(email, password);
         console.log('Login Successful');
-        console.log('User Credentials:', userCredential.user.emailVerified);
         hideModal();
         navigate('/tasks');
       } catch (error) {
@@ -94,11 +93,9 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
     // google login logic
     hideModal();
     try {
-      const { user, token } = await loginWithGoogle();
+      await loginWithGoogle();
       navigate('/tasks')
       console.log('user logged in through google provider');
-      console.log('User:', user);
-      console.log('Token:', token);
     } catch(error) {
       console.log('Google Sign-In Error:', error.message);
       setFormState((prevState) => ({
@@ -203,7 +200,7 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
                 </div>
                 <div className='footerText'>
                   <p>Don't have an account? <button onClick={switchToRegister}>Sign Up</button></p>
-                  <p>Login with <button onClick={handleGoogleLogin}>Google</button></p>
+                  <p>Login with <button onClick={handleGoogleLogin} style={{ paddingTop: '10px', paddingBottom: '10px' }}><FaGoogle /></button></p>
                   <p style={{ paddingTop: '5px'}}>Forgot your password? <button onClick={handleResetPassword}>Reset</button></p>
                   {responseBool && <p style={{ color: 'green' }}>{response}</p>}
                 </div>

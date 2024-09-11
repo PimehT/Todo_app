@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
 import { useAuth } from '../Context/authContext';
 import ResponseModal from './ResponseModal';
 import { ClipLoader } from 'react-spinners';
@@ -204,7 +204,7 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
               </div>
               <div className='footerText'>
                 <p>Already have an account? <button onClick={switchToLogin}>Login</button></p>
-                <p>SignUp with <button onClick={handleGoogleSignUp}>Google</button></p>
+                <p>SignUp with <button onClick={handleGoogleSignUp} style={{ paddingTop: '10px', paddingBottom: '10px' }}><FaGoogle /></button></p>
               </div>
             </div>
           </form>

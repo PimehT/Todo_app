@@ -11,7 +11,7 @@ import {
   sendPasswordResetEmail,
   confirmPasswordReset,
 } from 'firebase/auth';
-import { registerUser } from '../Utils/userManagement';
+import { deleteUserProfile, registerUser } from '../Utils/userManagement';
 
 const AuthContext = createContext();
 
@@ -25,7 +25,13 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+      if (user) {
+        setCurrentUser(user);
+        console.log('User is still logged in');
+      } else {
+        setCurrentUser(null);
+        console.log('User logged out');
+      }
       setUserLoggedIn(!!user);
       setLoading(false);
     });
@@ -41,7 +47,6 @@ export const AuthProvider = ({ children }) => {
         displayName: `${firstName} ${lastName}`
       });
       await sendEmailVerification(user);
-      console.log(user.uid);
 
       // send user details to backend
       await registerUser({
@@ -68,6 +73,7 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(user);
         throw new Error('Email not verified. Please verify your email before logging in.');
       }
+      localStorage.setItem('todoAccessToken', userCredential.user.accessToken);
       return userCredential;
     } catch (error) {
       if (!error.code) {
@@ -111,29 +117,22 @@ export const AuthProvider = ({ children }) => {
   }
 
   const loginWithGoogle = async () => {
-    /* try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const credential = googleProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      const user = result.user;
-      console.log('Result:', result);
-      console.log('Credentials: ', credential);
-      return { user, token };
-    } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.customData.email;
-      const credential = googleProvider.credentialFromError(error);
-      console.log('Error during Google sign-in:', error);
-      console.log('Error code:', errorCode);
-      console.log('User email:', email);
-      console.log('Credential error:', credential);
-      throw new Error(errorMessage);
-    } */
     const result = await signInWithPopup(auth, googleProvider);
-    console.log('auth result', result);
-    const user = result['user']
-    console.log('auth user: ', user);
+    const user = result['user'];
+    const firstName = result._tokenResponse['firstName'];
+    const lastName = result._tokenResponse['lastName'];
+    if (result._tokenResponse['isNewUser']) {
+      await registerUser({
+        uid: user.uid,
+        email: user.email,
+        first_name: firstName,
+        last_name: lastName,
+        password: 'GoogleAuth',
+        username: firstName,
+      });
+    }
+    setCurrentUser(user);
+    localStorage.setItem('todoAccessToken', result._tokenResponse['idToken']);
     return result;
   };
 
@@ -181,12 +180,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => signOut(auth);
+  const logout = () => {
+    signOut(auth);
+    // delete access token from local storage
+    localStorage.removeItem('todoAccessToken');
+    localStorage.removeItem('todolist');
+  };
 
   // Function to delete user account
   const deleteUser = async () => {
     try {
       await currentUser.delete();
+      const token = localStorage.getItem('todoAccessToken');
+      await deleteUserProfile(token);
       console.log('User account deleted successfully');
       return 'User account deleted successfully';
     } catch (error) {
