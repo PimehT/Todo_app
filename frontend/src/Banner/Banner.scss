@@ -42,6 +42,7 @@
       .primaryBtn {
         background-color: $color-primary;
         color: white;
+        text-wrap: nowrap;
 
         &:hover {
           background-color: darken($color-primary, 10%);
