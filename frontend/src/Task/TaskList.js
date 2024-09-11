@@ -8,9 +8,10 @@ const TaskList = ({
   handleDeleteTask,
   handleEditTask,
   toggleEditMode,
+  sleepingJake,
 }) => {
   return (
-    <div className="todo-list">
+    <div className={`todo-list ${sleepingJake ? 'sleeping' : ''}`}>
       {tasks.map((task) => (
         <TaskItem
           key={task.id}

@@ -11,13 +11,13 @@ const TaskItem = ({
   handleEditTask,
   toggleEditMode,
 }) => {
-  const [newTitle, setNewTitle] = useState(task.title);
+  // const [newTitle, setNewTitle] = useState(task.title);
   const [newDescription, setNewDescription] = useState(task.description);
   const [newDueDate, setNewDueDate] = useState(task.dueDate);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleEditTask(task.id, newTitle, newDescription, newDueDate);
+    handleEditTask(task.id, newDescription, newDueDate);
   };
 
   const formatDueDate = (dueDate) => {
@@ -86,12 +86,12 @@ const TaskItem = ({
       {/* Task content or Edit Mode */}
       {task.isEditing ? (
         <form onSubmit={handleSubmit} className="text-content">
-          <input
+          {/* <input
             type="text"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
             placeholder="Task title"
-          />
+          /> */}
           <textarea
             value={newDescription}
             onChange={(e) => setNewDescription(e.target.value)}

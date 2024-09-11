@@ -10,6 +10,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+  min-height: 400px;
 }
 
 section.todo-wrapper.container {
@@ -50,6 +51,8 @@ section.todo-wrapper.container {
   align-items: center;
   width: 100%;
   margin-bottom: 20px;
+  z-index: 100;
+  background-color: #fff;
 }
 
 .todo-input-item {
@@ -109,7 +112,7 @@ section.todo-wrapper.container {
   margin-bottom: 20px;
 }
 
-.btn-area button {
+.btn-area > button {
   position: relative;
   background: none; /* Assuming you want a transparent background */
   border: none;
@@ -122,7 +125,7 @@ section.todo-wrapper.container {
   font-weight: bold;
 }
 
-.btn-area button:after {
+.btn-area > button:after {
   content: '';
   position: absolute;
   width: 100%;
@@ -135,7 +138,7 @@ section.todo-wrapper.container {
   transition: transform 0.25s ease-out;
 }
 
-.btn-area button:hover:after {
+.btn-area > button:hover:after {
   transform: scaleX(1);
 }
 
@@ -144,16 +147,96 @@ section.todo-wrapper.container {
   transition: color 0.25s ease-out;
 }
 
+
 .primaryBtn {
   &:hover {
     background-color: darken($color-primary, 10%);
   }
 }
 
+/* Filter icon styling */
+.filter-dropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.filter-icon {
+  font-size: 1em;
+  position: absolute;
+  top: 20%;
+  color: black;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.dropdown-content {
+  display: flex;
+  width: 200px;
+  border-radius: 5px;
+  margin-top: 8px;
+  margin-left: 0;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+@media (max-width: 500px) {
+  .dropdown-content {
+    right: -100%;
+    left: auto;
+  }
+}
+
+.dropdown-content button {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.dropdown-content button:hover {
+  background-color: #f1f1f1;
+}
+
 /* Todo-list styles */
 
 .todo-list {
   width: 90%;
+
+  &.sleeping::after {
+    content: "enjoy the silence...";
+    text-align: center;
+    background: url('../assets/sleeping-jake.png') no-repeat center center;
+    background-size: 19.5rem;
+    background-position: 50% 35%;
+    position: absolute;
+    top: 25%;
+    left: calc(50% - 45%);
+    width: 90%;
+    height: 350px;
+    font-size: 0.8em;
+    color: #666;
+    opacity: 0.5;
+
+    @media (max-width: 600px) {
+      background-size: 60%;
+    }
+  }
 }
 
 .todo-list-item {
@@ -187,7 +270,8 @@ section.todo-wrapper.container {
   }
 
   &.completed {
-    background-color: #00ff7722;
+    // background-color: #73ff0022;
+    background-color: $color-secondary-variant;
   }
 
   img.icon {
