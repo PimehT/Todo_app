@@ -20,18 +20,23 @@ export const registerUser = async (userData) => {
 };
 
 // Login User
-export const loginUser = async (userData) => {
+/* export const loginUser = async (userData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/users/login`, userData);
+    const response = await axios.post(`${BASE_URL}/users/login`, userData,
+      {headers: {
+        'Content-Type': 'Application/json',
+      }},
+      { timeout: 10000 },
+    );
     return response.data;
   } catch (error) {
     console.error('Error logging in user:', error);
     throw new Error(error.response?.data?.message || 'Failed to log in user.');
   }
-};
+}; */
 
 // Logout User
-export const logoutUser = async () => {
+/* export const logoutUser = async () => {
   try {
     const response = await axios.post(`${BASE_URL}/users/logout`);
     return response.data;
@@ -39,12 +44,16 @@ export const logoutUser = async () => {
     console.error('Error logging out user:', error);
     throw new Error(error.response?.data?.message || 'Failed to log out user.');
   }
-};
+}; */
 
 // Get User Profile
-export const getUserProfile = async (userId) => {
+export const getUserProfile = async (token) => {
   try {
-    const response = await axios.get(`${BASE_URL}/users/${userId}`);
+    const response = await axios.get(`${BASE_URL}/users_profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('Error fetching user profile:', error);
@@ -53,12 +62,31 @@ export const getUserProfile = async (userId) => {
 };
 
 // Update User Profile
-export const updateUserProfile = async (userId, userData) => {
+export const updateUserProfile = async (token, userData) => {
   try {
-    const response = await axios.put(`${BASE_URL}/users/${userId}`, userData);
+    const response = await axios.put(`${BASE_URL}/update_user`, userData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('Error updating user profile:', error);
     throw new Error(error.response?.data?.message || 'Failed to update user profile.');
+  }
+};
+
+// Delete User Profile
+export const deleteUserProfile = async (token) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/delete_user`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting user profile:', error);
+    throw new Error(error.response?.data?.message || 'Failed to delete user profile.');
   }
 };
