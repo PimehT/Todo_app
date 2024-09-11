@@ -164,9 +164,10 @@ def update_task(task_id):
         return jsonify({'error': "deadline '%Y-%m-%dT%H:%M:%S'"}), 400
 
     # validate status
-    if data.get('status') not in ALLOWED_STATUS_VALUES:
+    new_status = data.get('status')
+    if new_status and new_status not in ALLOWED_STATUS_VALUES:
         return jsonify({'error': f"status allowed values {ALLOWED_STATUS_VALUES}"}), 400
-    if task.status == data.get('status'):
+    if task.status == new_status:
         return jsonify({}), 304  # Not modified
 
     for key, value in data.items():
