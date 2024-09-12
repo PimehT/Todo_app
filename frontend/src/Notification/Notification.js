@@ -1,15 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { FaBell } from 'react-icons/fa';
+import React, { useEffect, useRef, useState } from 'react';
 import { getOverdueTasks } from '../Utils/taskUtils';
+import { FaBell } from 'react-icons/fa';
 import './Notification.scss';
 
 const Notification = ({ onClick }) => {
   const [overdueTasks, setOverdueTasks] = useState([]);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const notificationsRef = useRef(null);
 
   useEffect(() => {
     const overdue = getOverdueTasks();
     setOverdueTasks(overdue);
+
+    const handleStorageChange = () => {
+      const updatedOverdueTasks = getOverdueTasks();
+      setOverdueTasks(updatedOverdueTasks);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const hasOverdueTasks = overdueTasks.length > 0;
@@ -21,6 +33,24 @@ const Notification = ({ onClick }) => {
   const closeDropdown = () => {
     setIsDropDownOpen(false);
   };
+
+  const handleClickOutside = (event) => {
+    if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+      setIsDropDownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isDropDownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropDownOpen]);
 
   return (
     <div style={{ position: 'relative', display: 'inline-block' }} onClick={onClick}>
@@ -40,7 +70,7 @@ const Notification = ({ onClick }) => {
         ></span>
       )}
       {isDropDownOpen && (
-        <div className="notification-dropdown">
+        <div className="notification-dropdown" ref={notificationsRef}>
           <button className="close-btn" onClick={closeDropdown}>&times;</button>
           <h4>Overdue Tasks</h4>
           {overdueTasks.length === 0 ? (

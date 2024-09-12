@@ -39,6 +39,23 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    const refreshInterval = setInterval(async () => {
+      if (currentUser) {
+        try {
+          const idToken = await currentUser.getIdToken(true);
+          localStorage.setItem('todoAccessToken', idToken);
+          console.log('Token refreshed');
+        } catch (error) {
+          console.error('Failed to refresh token:', error);
+        }
+      }
+    }, 3600000); // Refresh every hour (you can adjust this interval)
+  
+    return () => clearInterval(refreshInterval);
+  }, [currentUser]);
+  
+
   const signup = async (email, password, firstName, lastName) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -135,6 +152,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('todoAccessToken', result._tokenResponse['idToken']);
     return result;
   };
+
+  // setTimeout(console.log('this is the current user:', currentUser), 10000);
 
   const resetPassword = async (email) => {
     const actionCodeSettings = {

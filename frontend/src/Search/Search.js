@@ -43,10 +43,10 @@ const Search = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isExpanded]);
-
-  useEffect(() => {
+  
+  /* useEffect(() => {
     console.log('Search results:', results);
-  }, [results]);
+  }, [results]); */
 
   return (
     <div className='Search'>

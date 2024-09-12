@@ -93,6 +93,7 @@ const TaskItem = ({
             placeholder="Task title"
           /> */}
           <textarea
+            id={`description-${task.id}`}
             value={newDescription}
             onChange={(e) => setNewDescription(e.target.value)}
             placeholder="Task description"

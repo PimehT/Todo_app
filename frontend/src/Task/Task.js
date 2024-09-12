@@ -52,9 +52,6 @@ const Task = () => {
       status: newTaskItem.completed ? 'Complete' : 'Pending',
     };
 
-    console.log(newTaskItem);
-    console.log(taskData);
-
     const updatedTasksArr = [...allTasks, newTaskItem];
     setAllTasks(updatedTasksArr);
     setNewTitle("");

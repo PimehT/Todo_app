@@ -96,7 +96,6 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
 
     setLoadingIcon(true);
     if (validateFormData()) {
-      console.log('Form Data Submitted:', formState.formData);
       const { email, password, firstName, lastName } = formState.formData;
       try {
         await signup(email, password, firstName, lastName);
@@ -121,11 +120,9 @@ const RegisterModal = ({ hideModal, switchToLogin }) => {
     // sign up logic here
     hideModal();
     try {
-      const { token, user } = await loginWithGoogle();
+      await loginWithGoogle();
       navigate('/tasks');
       console.log('user registered through google provider');
-      console.log('User:', user);
-      console.log('Token:', token);
     } catch(error) {
       console.log('Google Sign-In Error:', error.message);
       setFormState((prevState) => ({

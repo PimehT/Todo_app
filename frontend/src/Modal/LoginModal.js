@@ -61,7 +61,6 @@ const LoginModal = ({ hideModal, switchToRegister }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateFormData()) {
-      console.log('Form Data Submitted:', formState.formData);
       setLoadingIcon(true);
       try {
         const { email, password } = formState.formData;
