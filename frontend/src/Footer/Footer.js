@@ -2,9 +2,13 @@
 import React from 'react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import './Footer.scss';
-import { getFullYear } from '../Utils/generalUtils';
 
 const Footer = () => {
+  // Get the current year
+  const getFullYear = () => {
+    return new Date().getFullYear();
+  };
+
   return (
     <footer className="footer">
       <div className="footer-content">
