@@ -4,6 +4,9 @@ import Header from '../Header/Header';
 import Banner from '../Banner/Banner';
 import Task from '../Task/Task';
 import Footer from '../Footer/Footer';
+import Contact from '../Footer/Contact';
+import Privacy from '../Footer/Privacy';
+import Terms from '../Footer/Terms';
 import { AuthProvider } from '../Context/authContext';
 import { ModalProvider } from '../Context/modalContext';
 import PrivateRoute from '../Routes/PrivateRoute';
@@ -20,6 +23,9 @@ function App() {
               <Routes>
                 <Route path="/" element={<Banner />} />
                 <Route path="/tasks" element={<PrivateRoute><Task /></PrivateRoute>} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
               </Routes>
             </main>
             <Footer />

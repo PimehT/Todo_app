@@ -1,0 +1,45 @@
+@import '../App/App.scss';
+
+
+.terms-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: $text-color;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: $color-primary;
+  }
+
+  h2 {
+    margin-top: 20px;
+    color: $primary-dark;
+  }
+
+  p {
+    margin-bottom: 15px;
+    color: $subtext-color;
+  }
+
+  a {
+    color: $color-primary;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .terms-section {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: $background-color;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
