@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
-import bannerImg from '../assets/todo-banner.png';
+import bannerImg380 from '../assets/todo-banner_b3gai0_c_scale,w_380.png';
+import bannerImg588 from '../assets/todo-banner_b3gai0_c_scale,w_588.png';
+import bannerImg865 from '../assets/todo-banner_b3gai0_c_scale,w_865.png';
 import LoginModal from '../Modal/LoginModal';
 import RegisterModal from '../Modal/RegisterModal';
 import { ModalContext } from '../Context/modalContext';
@@ -11,7 +13,18 @@ const Banner = () => {
   return (
     <section className='Banner container'>
       <div className='banner-image'>
-        <img src={bannerImg} alt='todo banner 1' className='banner-img' />
+        <img
+          sizes="(max-width: 2163px) 40vw, 865px"
+          srcSet={`
+            ${bannerImg380} 380w,
+            ${bannerImg588} 588w,
+            ${bannerImg865} 865w
+          `}
+          src={bannerImg865}
+          loading="lazy"
+          alt="todo banner"
+          className='banner-img'
+        />
       </div>
       <div className='banner-text'>
         <h2>Seize the Day, One Task at a Time</h2>
