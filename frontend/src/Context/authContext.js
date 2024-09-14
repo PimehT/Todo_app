@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import { auth, googleProvider, updateProfile } from '../firebase/firebase';
 import { 
   signInWithPopup, 
@@ -16,6 +17,7 @@ import { deleteUserProfile, registerUser } from '../Utils/userManagement';
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
+
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -39,19 +41,32 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
+  // Refresh the user token every hour
   useEffect(() => {
-    const refreshInterval = setInterval(async () => {
-      if (currentUser) {
-        try {
-          const idToken = await currentUser.getIdToken(true);
-          localStorage.setItem('todoAccessToken', idToken);
-          console.log('Token refreshed');
-        } catch (error) {
-          console.error('Failed to refresh token:', error);
+    const checkTokenExpiry = async () => {
+      const token = localStorage.getItem('todoAccessToken');
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp - currentTime < 300) { // Token will expire in the next 5 minutes (300 seconds)
+          try {
+            const idToken = await currentUser.getIdToken(true); // Refresh token
+            localStorage.setItem('todoAccessToken', idToken);
+            console.log('Token refreshed');
+          } catch (error) {
+            console.error('Failed to refresh token:', error);
+            if (error.code === 'auth/id-token-expired') {
+              await auth.signOut(); // Sign out user if token is expired
+              console.log('Token expired, user signed out');
+            }
+          }
         }
       }
-    }, 3600000); // Refresh every hour (you can adjust this interval)
-  
+    };
+
+    const refreshInterval = setInterval(checkTokenExpiry, 60000); // Check every minute
+
     return () => clearInterval(refreshInterval);
   }, [currentUser]);
   

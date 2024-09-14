@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { searchTasks } from '../Utils/taskManagement';
+import { formatDueDate } from '../Utils/taskUtils';
 import SearchIcon from '../assets/magnifying-glass-solid.svg';
 import './Search.scss';
 import { FaSpinner } from 'react-icons/fa';
@@ -15,7 +16,19 @@ const Search = () => {
     e.preventDefault();
     if (!query) return;
     try {
-      const response = await searchTasks(query);
+      const searchData = {
+        "filters": {
+          "condition": 'AND',
+          "rules": [
+            {
+              "field": 'title',
+              "operator": 'like',
+              "value": query
+            },
+          ]
+        }
+      }
+      const response = await searchTasks(searchData);
       setResults(response);
       setQuery('');
       setIsSearching(false);
@@ -70,9 +83,9 @@ const Search = () => {
             {results.map((result, index) => (
               <li key={index}>
                 <h3>{result.title}</h3>
-                <p>{result.description}</p>
+                {result.description.length > 0 && <p>{result.description}</p>}
                 <p>Status: {result.status === 'Complete' ? 'Complete' : 'Pending'}</p>
-                <p>Due Date: {result.dueDate}</p>
+                <p>Due Date: {formatDueDate(result.deadline)}</p>
               </li>
             ))}
           </ul>

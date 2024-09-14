@@ -13,14 +13,16 @@ export const fetchTasks = async () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      return response.data;
+
+      return response.data; // Successfully fetched tasks
     } catch (error) {
       retries--;
-      if (retries === 0) console.log('Error fetching tasks', error);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (retries === 0) console.log('Error fetching tasks after multiple retries', error);
+      await new Promise(resolve => setTimeout(resolve, 3000));
     }
   }
 };
+
 
 // Create a new task
 export const createTask = async (taskData) => {
@@ -109,12 +111,12 @@ export const deleteTask = async (taskId) => {
 };
 
 // Search tasks
-export const searchTasks = async (query) => {
+export const searchTasks = async (searchData) => {
   const token = localStorage.getItem('todoAccessToken');
   if (token === null) {
     throw new Error('User not authenticated');
   }
-  const response = await axios.get(`${BASE_URL}?title=${query}`, {
+  const response = await axios.post(`${BASE_URL}/search`, searchData, {
     headers: {
       Authorization: `Bearer ${token}`,
     }

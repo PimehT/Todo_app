@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Check from '../assets/check-solid.svg';
 import Remove from '../assets/trash-can-regular.svg';
 import EditIcon from '../assets/pen-to-square-regular.svg';
+import { formatDueDate } from '../Utils/taskUtils';
 
 const TaskItem = ({
   task,
@@ -20,52 +21,7 @@ const TaskItem = ({
     handleEditTask(task.id, newDescription, newDueDate);
   };
 
-  const formatDueDate = (dueDate) => {
-    if (!dueDate) {
-      return "";
-    }
-    const date = new Date(dueDate);
-    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
-    
-    const formattedDay = isTodayOrTomorrow(dueDate);
-    const currentYear = new Date().getFullYear();
-    const taskYear = date.getFullYear();
-
-    if (currentYear === taskYear && formattedDay !== 'Other') {
-      return `${formattedDay} at ${date.toLocaleString('en-US', options)}`;
-    } else {
-      options.weekday = 'short';
-    }
   
-    const formattedDate = date.toLocaleString('en-US', options);
-  
-    if (currentYear !== taskYear) {
-      return `${formattedDate}, ${taskYear}`;
-    }
-  
-    return formattedDate;
-  };
-
-  const isTodayOrTomorrow = (dueDate) => {
-    const date = new Date(dueDate);
-    const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
-  
-    // Remove time part for comparison
-    const isSameDay = (date1, date2) => 
-      date1.getFullYear() === date2.getFullYear() &&
-      date1.getMonth() === date2.getMonth() &&
-      date1.getDate() === date2.getDate();
-  
-    if (isSameDay(date, today)) {
-      return 'Today';
-    } else if (isSameDay(date, tomorrow)) {
-      return 'Tomorrow';
-    } else {
-      return 'Other';
-    }
-  };
 
   return (
     <div className={`todo-list-item ${task.completed ? 'completed' : ''}`}>
@@ -108,7 +64,7 @@ const TaskItem = ({
       ) : (
         <details className="text-content">
           <summary>{task.title}</summary>
-          <p>{task.description}</p>
+          <p>{task.description || 'No description available'}</p>
           <p>{formatDueDate(task.dueDate)}</p>
         </details>
       )}

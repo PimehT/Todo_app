@@ -52,3 +52,50 @@ export const getOverdueTasks = () => {
 export const isTitleUnique = (title, tasks) => {
   return tasks.every(task => task.title !== title);
 };
+
+export const formatDueDate = (dueDate) => {
+  if (!dueDate) {
+    return "";
+  }
+  const date = new Date(dueDate);
+  const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+  
+  const formattedDay = isTodayOrTomorrow(dueDate);
+  const currentYear = new Date().getFullYear();
+  const taskYear = date.getFullYear();
+
+  if (currentYear === taskYear && formattedDay !== 'Other') {
+    return `${formattedDay} at ${date.toLocaleString('en-US', options)}`;
+  } else {
+    options.weekday = 'short';
+  }
+
+  const formattedDate = date.toLocaleString('en-US', options);
+
+  if (currentYear !== taskYear) {
+    return `${formattedDate}, ${taskYear}`;
+  }
+
+  return formattedDate;
+};
+
+export const isTodayOrTomorrow = (dueDate) => {
+  const date = new Date(dueDate);
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+
+  // Remove time part for comparison
+  const isSameDay = (date1, date2) => 
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate();
+
+  if (isSameDay(date, today)) {
+    return 'Today';
+  } else if (isSameDay(date, tomorrow)) {
+    return 'Tomorrow';
+  } else {
+    return 'Other';
+  }
+};

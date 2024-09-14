@@ -35,11 +35,12 @@ const Task = () => {
     }
 
     const date = newDueDate ? newDueDate : dueEndOfDay();
+    const userDescription = newDescription ? newDescription : '';
 
     const newTaskItem = {
       id: uuidv4(),
       title: newTitle,
-      description: newDescription,
+      description: userDescription,
       dueDate: newDueDate.length > 0 ? newDueDate : date,
       completed: false,
       isEditing: false,
@@ -47,7 +48,7 @@ const Task = () => {
 
     const taskData = {
       title: newTitle,
-      description: newDescription,
+      description: userDescription,
       deadline: newDueDate ? convertToUtc(newDueDate) : convertToUtc(date),
       status: newTaskItem.completed ? 'Complete' : 'Pending',
     };

@@ -12,10 +12,13 @@
   input {
     all: unset;
     font: 16px system-ui;
-    color: $color-primary;
+    color: $color-primary !important;
     width: 100%;
     height: 100%;
     padding: 6px 10px;
+    box-sizing: border-box !important;
+    border-radius: 5px 0 0 5px;
+    background-color: $color-secondary !important;
   }
 
   button {
@@ -51,6 +54,17 @@ input[type="search"]::-webkit-search-cancel-button {
 // Optionally, change the color on hover
 input[type="search"]::-webkit-search-cancel-button:hover {
   fill: darken($color-primary, 10%); // Darken the color slightly on hover
+}
+
+// Focus-visible styles
+input[type="search"]:focus-visible {
+  fill: $color-secondary-variant;
+}
+
+// Autofill styles
+input[type="search"]:-webkit-autofill {
+  background-color: $color-secondary !important;
+  color: $color-primary !important;
 }
 
 .search-results {
@@ -141,3 +155,16 @@ input[type="search"]::-webkit-search-cancel-button:hover {
     }
   }
 }
+
+
+/* // Styles for input#query
+input#query {
+  appearance: none !important;
+  padding-block: 1px !important;
+  padding-inline: 2px !important;
+  outline-offset: 0px !important;
+  background-color: #FFE4D9 !important;
+  color: $color-primary !important;
+  overflow-clip-margin: 0px !important;
+  overflow: clip !important;
+} */

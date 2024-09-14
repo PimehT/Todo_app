@@ -1,9 +1,30 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Modal.scss';
 
 const ResponseModal = ({ title, message, onResend, onConfirm, onClose, resendMessage }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const responseModalRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (responseModalRef.current && !responseModalRef.current.contains(event.target)) {
+      setIsExpanded(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isExpanded) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isExpanded]);
+
   return (
-    <div className="modalZone">
+    <div className="modalZone" ref={responseModalRef}>
       <div className="modalContainer">
         <div className="modalHeader">
           <h2>{title}</h2>
