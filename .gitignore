@@ -3,3 +3,4 @@
 .env
 frontend/.cache/
 frontend/node_modules/
+fire_key.json
