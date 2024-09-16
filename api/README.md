@@ -1,5 +1,5 @@
 ## Backend
 
-![Backend Architechure]("https://github.com/PimehT/Todo_app.git/readme-pictures/Backend architecture.png")
+![Backend_architecture](https://github.com/user-attachments/assets/0eb9bdb7-2b61-4653-86d2-fcabba3824fa)
 
 * **Built with Flask**: Our website
