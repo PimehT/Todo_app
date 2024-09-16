@@ -1,5 +1,5 @@
 ## Backend
 
-![Backend Architechure](/home/kalule/Todo_app/readme-pictures/Backend architecture.png)
+![Backend Architechure]("https://github.com/PimehT/Todo_app.git/readme-pictures/Backend architecture.png")
 
 * **Built with Flask**: Our website
