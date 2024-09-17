@@ -37,15 +37,15 @@ Updates the task with the task_id based on the sent data.
 * **POST /tasks/search**
 Returns results based on the sent filter data. The sent data should be in the form below;
 
-    ```json
+    ```python
     {
     "filters": {
         "condition": "OR | AND", # specifies how rules shall be matched
         "rules": [
             {
-                "field": <column>, # column to search
-                "operator": 'eq|neq|like, # condition to match the value
-                "value": <value> # value to match
+                "field": '<column>', # column to search
+                "operator": 'eq|neq|like', # condition to match the value
+                "value": '<value>' # value to match
             },
             ]
         }
