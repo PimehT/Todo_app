@@ -34,7 +34,7 @@ Creates a task under that user
 * **PUT /tasks/<task_id>**\
 Updates the task with the task_id based on the sent data.
 
-* **POST /tasks/search**
+* **POST /tasks/search**\
 Returns results based on the sent filter data. The sent data should be in the form below;
 
     ```python
@@ -52,14 +52,14 @@ Returns results based on the sent filter data. The sent data should be in the fo
     }
     ```
 
-* **DELETE /tasks/<task_id>**
+* **DELETE /tasks/<task_id>**\
 Deletes the task with the provided task_id
 
-* **POST /users/register**
+* **POST /users/register**\
 Creates a new user
 
-* **GET /users_profile**
+* **GET /users_profile**\
 Returns the data of the currently logged in user
 
-* **PUT /update_user**
+* **PUT /update_user**\
 Updates data of the current user based on the data sent
