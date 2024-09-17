@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",
     "firebase": "^10.13.0",
@@ -17,6 +17,7 @@
     "react-scripts": "5.0.1",
     "react-spinners": "^0.14.1",
     "sass": "^1.77.8",
+    "util": "^0.12.5",
     "uuid": "^10.0.0",
     "web-vitals": "^2.1.4"
   },
@@ -45,7 +46,15 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-react": "^7.24.7",
+    "babel-jest": "^29.7.0",
+    "jest": "^27.5.1",
     "webpack-bundle-analyzer": "^4.10.2"
-  }
+  },
+  "jest": {
+  "transformIgnorePatterns": ["/node_modules/(?!(axios|react-icons|uuid)/)"]
+}
 }
