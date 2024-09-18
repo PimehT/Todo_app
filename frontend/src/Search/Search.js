@@ -14,6 +14,7 @@ const Search = () => {
   
   const handleSearch = async (e) => {
     e.preventDefault();
+    setIsSearching(true);
     if (!query) return;
     try {
       const searchData = {
@@ -74,7 +75,7 @@ const Search = () => {
           onChange={(e) => setQuery(e.target.value)}
         />
         <button type="submit" className='icon'>
-          {isSearching ? (FaSpinner) : (<img src={SearchIcon} alt="Search Icon" className='search' />)}
+          {isSearching ? (<FaSpinner />) : (<img src={SearchIcon} alt="Search Icon" className='search' />)}
         </button>
       </form>
       {isExpanded && (<div className='search-results' ref={searchResultsRef}>

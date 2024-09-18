@@ -1,4 +1,5 @@
 import moment from "moment-timezone";
+import { fetchTasks } from '../Utils/taskManagement';
 
 export const sortTasksByDueDate = (order, tasks) => {
   const tasksCopy = JSON.parse(JSON.stringify(tasks));
@@ -39,13 +40,19 @@ export const convertToLocalTimeZone = (dueDate) => {
 }
 
 // Get overdue tasks
-export const getOverdueTasks = () => {
-  if (!localStorage.getItem('todolist')) {
+export const getOverdueTasks = async () => {
+  const tasks = await fetchTasks();
+  if (!tasks) {
     return [];
   }
-  const tasks = JSON.parse(localStorage.getItem('todolist')) || [];
+
   const now = new Date();
-  return tasks.filter(task => new Date(task.dueDate) < now && !task.completed);
+  const overdueTasks = tasks.filter(task => {
+    const taskDeadline = new Date(task.deadline);
+    return taskDeadline < now && task.status === 'Pending';
+  });
+
+  return overdueTasks;
 };
 
 // Make sure user title is unique
@@ -68,6 +75,9 @@ export const formatDueDate = (dueDate) => {
     return `${formattedDay} at ${date.toLocaleString('en-US', options)}`;
   } else {
     options.weekday = 'short';
+    options.year = 'numeric';
+    options.month = 'numeric';
+    options.day = 'numeric';
   }
 
   const formattedDate = date.toLocaleString('en-US', options);

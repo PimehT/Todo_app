@@ -7,6 +7,7 @@ import RegisterModal from '../Modal/RegisterModal';
 import { ModalContext } from '../Context/modalContext';
 import './Banner.scss';
 
+
 const Banner = () => {
   const { modalState, showModal, hideModal, switchToLogin, switchToRegister } = useContext(ModalContext);
 

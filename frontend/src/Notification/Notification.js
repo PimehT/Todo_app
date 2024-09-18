@@ -8,23 +8,21 @@ const Notification = ({ onClick }) => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const notificationsRef = useRef(null);
 
-  useEffect(() => {
-    const overdue = getOverdueTasks();
-    setOverdueTasks(overdue);
-
-    const handleStorageChange = () => {
-      const updatedOverdueTasks = getOverdueTasks();
-      setOverdueTasks(updatedOverdueTasks);
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
-
   const hasOverdueTasks = overdueTasks.length > 0;
+
+  useEffect(() => {
+    const fetchOverdueTasks = async () => {
+      try {
+        const overdue = await getOverdueTasks();
+        setOverdueTasks(overdue || []); // Ensure overdue is an array
+      } catch (error) {
+        console.error('Failed to fetch overdue tasks:', error);
+        setOverdueTasks([]); // Set to empty array on error
+      }
+    };
+
+    fetchOverdueTasks();
+  }, []);
 
   const toggleNotification = () => {
     setIsDropDownOpen(!isDropDownOpen);

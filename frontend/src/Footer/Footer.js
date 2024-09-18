@@ -10,10 +10,10 @@ const Footer = () => {
   };
 
   return (
-    <footer className="footer">
+    <footer data-testid="footer-container" className="footer">
       <div className="footer-content">
         {/* Footer links */}
-        <div className="footer-section">
+        <div className="footer-section" data-testid="quick-links">
           <h4>Quick Links</h4>
           <ul>
             <li><a href="/">About</a></li>
@@ -24,7 +24,7 @@ const Footer = () => {
         </div>
 
         {/* Meet the Team */}
-        <div className="footer-section">
+        <div className="footer-section" data-testid="team-members">
           <h4>Meet the Team</h4>
           <div className="team-members">
             <div>
@@ -54,7 +54,7 @@ const Footer = () => {
 
       {/* Footer bottom text */}
       <div className="footer-bottom">
-        <p>&copy; {getFullYear()} TODO - All rights reserved.</p>
+        <p id="copyright-text">&copy; {getFullYear()} TODO - All rights reserved.</p>
       </div>
     </footer>
   );

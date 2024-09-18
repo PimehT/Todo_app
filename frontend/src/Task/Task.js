@@ -34,6 +34,11 @@ const Task = () => {
       return;
     }
 
+    if (newDueDate && convertToUtc(newDueDate) < new Date().toISOString().split('.')[0]) {
+      alert("Due date must be in the future");
+      return;
+    }
+
     const date = newDueDate ? newDueDate : dueEndOfDay();
     const userDescription = newDescription ? newDescription : '';
 
