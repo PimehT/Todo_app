@@ -77,7 +77,7 @@ const Notification = ({ onClick }) => {
             <ul>
               {overdueTasks.map((task) => (
                 <li key={task.id}>
-                  <strong>{task.title}</strong>: {task.description} (Due: {new Date(task.dueDate).toLocaleString()})
+                  <strong>{task.title}</strong>: {task.description} (Due: {new Date(task.deadline).toLocaleString()})
                 </li>
               ))}
             </ul>

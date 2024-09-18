@@ -75,7 +75,7 @@ const Search = () => {
           onChange={(e) => setQuery(e.target.value)}
         />
         <button type="submit" className='icon'>
-          {isSearching ? (<FaSpinner />) : (<img src={SearchIcon} alt="Search Icon" className='search' />)}
+          {isSearching ? (<FaSpinner color='#FC5813' />) : (<img src={SearchIcon} alt="Search Icon" className='search' />)}
         </button>
       </form>
       {isExpanded && (<div className='search-results' ref={searchResultsRef}>
