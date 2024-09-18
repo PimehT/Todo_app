@@ -53,9 +53,6 @@ def search(filters: dict, cls):
     if not user:
         error = {'filters-error': 'user is None'}
         return results, error
-    else:
-        # user_id = user.id
-        fields['user_id'] = user.id
 
     columns = {}
     for col in cls.__table__.columns:
@@ -100,6 +97,8 @@ def search(filters: dict, cls):
             clauses.append(column_obj.like(f"%{value}%"))
         else:
             continue
+        # add user_id clause
+        clauses.append(columns['user_id'] == user.id)
 
     objs = storage.advanced_search(cls, clauses, condition)
 
