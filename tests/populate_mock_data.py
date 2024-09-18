@@ -3,7 +3,7 @@
 Run this script to clear the database, and then populate it with data
 """
 
-FILE_PATH = "/home/kalule/Todo_app/mock_data.xlsx"
+FILE_PATH = "./mock_data.xlsx"
 
 
 # DELETE EXISTING DATABASE
@@ -25,11 +25,11 @@ engine = create_engine(f'mysql+mysqldb://{username}:{password}@{host}',
 connection = engine.connect()
 
 SQL_STATEMENTS = [
-"DROP DATABASE IF EXISTS todo_dev_db;",
-"CREATE DATABASE IF NOT EXISTS todo_dev_db;",
-"CREATE USER IF NOT EXISTS 'todo_dev'@'localhost' IDENTIFIED BY 'todo_dev_pwd';",
-"GRANT ALL PRIVILEGES ON `todo_dev_db`.* TO 'todo_dev'@'localhost';",
-"GRANT SELECT ON `performance_schema`.* TO 'todo_dev'@'localhost';",
+"DROP DATABASE IF EXISTS todo_test_db;",
+"CREATE DATABASE IF NOT EXISTS todo_test_db;",
+"CREATE USER IF NOT EXISTS 'todo_test'@'localhost' IDENTIFIED BY 'todo_test_pwd';",
+"GRANT ALL PRIVILEGES ON `todo_test_db`.* TO 'todo_test'@'localhost';",
+"GRANT SELECT ON `performance_schema`.* TO 'todo_test'@'localhost';",
 "FLUSH PRIVILEGES;",
 ]
 
