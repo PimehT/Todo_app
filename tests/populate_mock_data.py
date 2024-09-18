@@ -46,6 +46,8 @@ finally:
     connection.close()
     print("DATABASE reset successfully.")
 
+import sys
+sys.path.append('..')
 # POPULATE DATABASE
 import openpyxl as op
 import models
