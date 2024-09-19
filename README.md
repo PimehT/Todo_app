@@ -1,10 +1,13 @@
 # TODO App
 
-Todo is a modern, user-friendly task management app designed to help users efficiently organize their daily activities. With a clean and intuitive interface, Todo allows users to create, manage, and track tasks effortlessly.
+[Todo](https://66eb4430f0678f20a64e3411--guileless-pavlova-01b7ff.netlify.app/) is a modern, user-friendly task management app designed to help users efficiently organize their daily activities. With a clean and intuitive interface, Todo allows users to create, manage, and track tasks effortlessly.
 With core features such as user authentication, task management, real-time updates, data synchronization, and notifications, Todo targets anyone looking to streamline their daily tasks, from professionals managing work projects to students organizing their study schedules.
 
 ---
 
+
+
+---
 # Frontend
 
 Our website was built, compiled and then hosted on netlify.
