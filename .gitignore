@@ -1,3 +1,7 @@
 **/__pycache__/
 fire_key.json
 package-lock.json
+.env
+.cache/
+**/node_modules/
+fire_key.json
