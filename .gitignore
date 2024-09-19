@@ -1,6 +1,6 @@
-/new
 **/__pycache__/
-.env
-frontend/.cache/
-frontend/node_modules/
 fire_key.json
+package-lock.json
+.env
+.cache/
+**/node_modules/
