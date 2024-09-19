@@ -5,7 +5,7 @@ With core features such as user authentication, task management, real-time updat
 
 ---
 
-
+![image](https://github.com/user-attachments/assets/3f9a71da-93fb-44a8-901c-bf21bcf07970)
 
 ---
 # Frontend
