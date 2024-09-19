@@ -1,0 +1,32 @@
+$color-primary: #FC5813;
+$color-secondary: #FFE4D9;
+$color-secondary-variant: #FDF1ED;
+$color-grey: #F9F9F9;
+$color-white: #ffffff;
+$color-success: #e8fadd;
+$color-danger: #ffcccc;
+
+// width of screen sizes
+$width-desktop: 1200px;
+$width-tablet: 768px;
+$width-mobile: 480px;
+
+
+$primary-dark: darken($color-primary, 10%);
+$primary-light: lighten($color-primary, 20%);
+$background-color: #f9f9f9;
+$text-color: #333;
+$subtext-color: #666;
+
+body {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: 750px;
+}
+
+button:hover {
+  cursor: pointer;
+}
